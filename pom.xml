@@ -24,7 +24,7 @@
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <node.version>v14.17.1</node.version>
         <npm.version>7.18.1</npm.version>
 
@@ -277,15 +277,20 @@
             <version>${archunit-junit5.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>kafka</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.kafka</groupId>-->
+<!--            <artifactId>spring-kafka</artifactId>-->
+<!--            <version>2.7.3</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.kafka</groupId>-->
+<!--            <artifactId>kafka-clients</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.testcontainers</groupId>-->
+<!--            <artifactId>kafka</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>problem-spring-web</artifactId>
@@ -620,7 +625,7 @@
                     <version>${jib-maven-plugin.version}</version>
                     <configuration>
                         <from>
-                            <image>adoptopenjdk:11-jre-hotspot</image>
+                            <image>adoptopenjdk:1.8-jre-hotspot</image>
                         </from>
                         <to>
                             <image>ticker:latest</image>
