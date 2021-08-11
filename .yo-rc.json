@@ -43,7 +43,9 @@
     "devServerPort": 9060,
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "reactive": false
+    "reactive": false,
+    "entities": ["Ticker", "TickerProfile", "WatchList"],
+    "lastLiquibaseTimestamp": 1628546136000
   },
   "git-provider": "GitHub",
   "git-company": "eskandg",

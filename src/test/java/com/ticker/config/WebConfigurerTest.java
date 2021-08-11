@@ -73,7 +73,7 @@ class WebConfigurerTest {
         webConfigurer.customize(container);
         assertThat(container.getMimeMappings().get("abs")).isEqualTo("audio/x-mpeg");
         assertThat(container.getMimeMappings().get("html")).isEqualTo("text/html");
-        assertThat(container.getMimeMappings().get("json")).isEqualTo("application/json");
+        assertThat(container.getMimeMappings().get("com/ticker/json")).isEqualTo("application/json");
         if (container.getDocumentRoot() != null) {
             assertThat(container.getDocumentRoot()).isEqualTo(new File("target/classes/static/"));
         }

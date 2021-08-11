@@ -1,0 +1,50 @@
+entity Ticker {
+    symbol String required
+    updatedAt ZonedDateTime
+	change Double
+    marketPrice Double
+    marketCap String
+    volume Integer
+    avgVolume Integer
+    low Double
+    high Double
+    open Double
+    close Double
+    previousClose Double
+    bid Double
+    ask Double
+    bidVol Double
+    askVol Double
+    dayLow Double
+    dayHigh Double
+    fiftyTwoWeekLow Double
+    fiftyTwoWeekHigh Double
+    beta Float // 5 year monthly variation
+    peRatio Float
+    eps Float
+}
+
+entity TickerProfile {
+	tickerSymbol String required unique
+    industry String
+    name String
+    phone String
+    website String
+    description String
+    fullTimeEmployees Integer
+}
+
+entity WatchList {
+}
+
+relationship OneToOne {
+	Ticker{tickerSymbol} to TickerProfile{ticker}
+}
+
+relationship ManyToOne {
+	WatchList{user} to User
+}
+
+relationship ManyToMany {
+	WatchList{ticker} to Ticker{watchedIn}
+}

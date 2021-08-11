@@ -1,0 +1,124 @@
+{
+  "name": "Ticker",
+  "fields": [
+    {
+      "fieldName": "symbol",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "updatedAt",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "change",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "marketPrice",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "marketCap",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "volume",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "avgVolume",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "low",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "high",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "open",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "close",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "previousClose",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "bid",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "ask",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "bidVol",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "askVol",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "dayLow",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "dayHigh",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "fiftyTwoWeekLow",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "fiftyTwoWeekHigh",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "beta",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "peRatio",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "eps",
+      "fieldType": "Float"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "tickerProfile",
+      "otherEntityRelationshipName": "ticker",
+      "relationshipName": "tickerSymbol",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "watchList",
+      "otherEntityRelationshipName": "ticker",
+      "relationshipName": "watchedIn",
+      "ownerSide": false
+    }
+  ],
+  "entityTableName": "ticker",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210809215534"
+}
