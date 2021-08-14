@@ -131,6 +131,9 @@ public class TickerProfileResource {
                     if (tickerProfile.getTickerSymbol() != null) {
                         existingTickerProfile.setTickerSymbol(tickerProfile.getTickerSymbol());
                     }
+                    if (tickerProfile.getLogoUrl() != null) {
+                        existingTickerProfile.setLogoUrl(tickerProfile.getLogoUrl());
+                    }
                     if (tickerProfile.getIndustry() != null) {
                         existingTickerProfile.setIndustry(tickerProfile.getIndustry());
                     }
@@ -169,11 +172,11 @@ public class TickerProfileResource {
      */
     @GetMapping("/ticker-profiles")
     public List<TickerProfile> getAllTickerProfiles(@RequestParam(required = false) String filter) {
-        if ("ticker-is-null".equals(filter)) {
-            log.debug("REST request to get all TickerProfiles where ticker is null");
+        if ("symbol-is-null".equals(filter)) {
+            log.debug("REST request to get all TickerProfiles where symbol is null");
             return StreamSupport
                 .stream(tickerProfileRepository.findAll().spliterator(), false)
-                .filter(tickerProfile -> tickerProfile.getTicker() == null)
+                .filter(tickerProfile -> tickerProfile.getSymbol() == null)
                 .collect(Collectors.toList());
         }
         log.debug("REST request to get all TickerProfiles");
@@ -181,15 +184,22 @@ public class TickerProfileResource {
     }
 
     /**
-     * {@code GET  /ticker-profiles/:id} : get the "id" tickerProfile.
+     * {@code GET  /ticker-profiles/:tickerSymbol} : get the "tickerSymbol" tickerProfile.
      *
-     * @param id the id of the tickerProfile to retrieve.
+     * @param tickerSymbol the tickerSymbol of the tickerProfile to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the tickerProfile, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/ticker-profiles/{id}")
-    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable Long id) {
-        log.debug("REST request to get TickerProfile : {}", id);
-        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findById(id);
+    //    @GetMapping("/ticker-profiles/{id}")
+    //    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable Long id) {
+    //        log.debug("REST request to get TickerProfile : {}", id);
+    //        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findById(id);
+    //        return ResponseUtil.wrapOrNotFound(tickerProfile);
+    //    }
+
+    @GetMapping("/ticker-profiles/{tickerSymbol}")
+    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable String tickerSymbol) {
+        log.debug("REST request to get TickerProfile : {}", tickerSymbol);
+        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findByTickerSymbol(tickerSymbol);
         return ResponseUtil.wrapOrNotFound(tickerProfile);
     }
 

@@ -7,6 +7,10 @@
       "fieldValidateRules": ["required", "unique"]
     },
     {
+      "fieldName": "logoUrl",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "industry",
       "fieldType": "String"
     },
@@ -24,7 +28,8 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "String"
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
     },
     {
       "fieldName": "fullTimeEmployees",
@@ -36,7 +41,7 @@
       "relationshipType": "one-to-one",
       "otherEntityName": "ticker",
       "otherEntityRelationshipName": "tickerSymbol",
-      "relationshipName": "ticker",
+      "relationshipName": "symbol",
       "ownerSide": false
     }
   ],

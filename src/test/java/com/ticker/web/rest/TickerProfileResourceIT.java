@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link TickerProfileResource} REST controller.
@@ -31,6 +32,9 @@ class TickerProfileResourceIT {
 
     private static final String DEFAULT_TICKER_SYMBOL = "AAAAAAAAAA";
     private static final String UPDATED_TICKER_SYMBOL = "BBBBBBBBBB";
+
+    private static final String DEFAULT_LOGO_URL = "AAAAAAAAAA";
+    private static final String UPDATED_LOGO_URL = "BBBBBBBBBB";
 
     private static final String DEFAULT_INDUSTRY = "AAAAAAAAAA";
     private static final String UPDATED_INDUSTRY = "BBBBBBBBBB";
@@ -76,6 +80,7 @@ class TickerProfileResourceIT {
     public static TickerProfile createEntity(EntityManager em) {
         TickerProfile tickerProfile = new TickerProfile()
             .tickerSymbol(DEFAULT_TICKER_SYMBOL)
+            .logoUrl(DEFAULT_LOGO_URL)
             .industry(DEFAULT_INDUSTRY)
             .name(DEFAULT_NAME)
             .phone(DEFAULT_PHONE)
@@ -94,6 +99,7 @@ class TickerProfileResourceIT {
     public static TickerProfile createUpdatedEntity(EntityManager em) {
         TickerProfile tickerProfile = new TickerProfile()
             .tickerSymbol(UPDATED_TICKER_SYMBOL)
+            .logoUrl(UPDATED_LOGO_URL)
             .industry(UPDATED_INDUSTRY)
             .name(UPDATED_NAME)
             .phone(UPDATED_PHONE)
@@ -122,6 +128,7 @@ class TickerProfileResourceIT {
         assertThat(tickerProfileList).hasSize(databaseSizeBeforeCreate + 1);
         TickerProfile testTickerProfile = tickerProfileList.get(tickerProfileList.size() - 1);
         assertThat(testTickerProfile.getTickerSymbol()).isEqualTo(DEFAULT_TICKER_SYMBOL);
+        assertThat(testTickerProfile.getLogoUrl()).isEqualTo(DEFAULT_LOGO_URL);
         assertThat(testTickerProfile.getIndustry()).isEqualTo(DEFAULT_INDUSTRY);
         assertThat(testTickerProfile.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTickerProfile.getPhone()).isEqualTo(DEFAULT_PHONE);
@@ -178,11 +185,12 @@ class TickerProfileResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tickerProfile.getId().intValue())))
             .andExpect(jsonPath("$.[*].tickerSymbol").value(hasItem(DEFAULT_TICKER_SYMBOL)))
+            .andExpect(jsonPath("$.[*].logoUrl").value(hasItem(DEFAULT_LOGO_URL)))
             .andExpect(jsonPath("$.[*].industry").value(hasItem(DEFAULT_INDUSTRY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE)))
             .andExpect(jsonPath("$.[*].website").value(hasItem(DEFAULT_WEBSITE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].fullTimeEmployees").value(hasItem(DEFAULT_FULL_TIME_EMPLOYEES)));
     }
 
@@ -199,11 +207,12 @@ class TickerProfileResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(tickerProfile.getId().intValue()))
             .andExpect(jsonPath("$.tickerSymbol").value(DEFAULT_TICKER_SYMBOL))
+            .andExpect(jsonPath("$.logoUrl").value(DEFAULT_LOGO_URL))
             .andExpect(jsonPath("$.industry").value(DEFAULT_INDUSTRY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE))
             .andExpect(jsonPath("$.website").value(DEFAULT_WEBSITE))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.fullTimeEmployees").value(DEFAULT_FULL_TIME_EMPLOYEES));
     }
 
@@ -228,6 +237,7 @@ class TickerProfileResourceIT {
         em.detach(updatedTickerProfile);
         updatedTickerProfile
             .tickerSymbol(UPDATED_TICKER_SYMBOL)
+            .logoUrl(UPDATED_LOGO_URL)
             .industry(UPDATED_INDUSTRY)
             .name(UPDATED_NAME)
             .phone(UPDATED_PHONE)
@@ -248,6 +258,7 @@ class TickerProfileResourceIT {
         assertThat(tickerProfileList).hasSize(databaseSizeBeforeUpdate);
         TickerProfile testTickerProfile = tickerProfileList.get(tickerProfileList.size() - 1);
         assertThat(testTickerProfile.getTickerSymbol()).isEqualTo(UPDATED_TICKER_SYMBOL);
+        assertThat(testTickerProfile.getLogoUrl()).isEqualTo(UPDATED_LOGO_URL);
         assertThat(testTickerProfile.getIndustry()).isEqualTo(UPDATED_INDUSTRY);
         assertThat(testTickerProfile.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTickerProfile.getPhone()).isEqualTo(UPDATED_PHONE);
@@ -324,7 +335,10 @@ class TickerProfileResourceIT {
         TickerProfile partialUpdatedTickerProfile = new TickerProfile();
         partialUpdatedTickerProfile.setId(tickerProfile.getId());
 
-        partialUpdatedTickerProfile.tickerSymbol(UPDATED_TICKER_SYMBOL).name(UPDATED_NAME);
+        partialUpdatedTickerProfile
+            .tickerSymbol(UPDATED_TICKER_SYMBOL)
+            .industry(UPDATED_INDUSTRY)
+            .fullTimeEmployees(UPDATED_FULL_TIME_EMPLOYEES);
 
         restTickerProfileMockMvc
             .perform(
@@ -339,12 +353,13 @@ class TickerProfileResourceIT {
         assertThat(tickerProfileList).hasSize(databaseSizeBeforeUpdate);
         TickerProfile testTickerProfile = tickerProfileList.get(tickerProfileList.size() - 1);
         assertThat(testTickerProfile.getTickerSymbol()).isEqualTo(UPDATED_TICKER_SYMBOL);
-        assertThat(testTickerProfile.getIndustry()).isEqualTo(DEFAULT_INDUSTRY);
-        assertThat(testTickerProfile.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testTickerProfile.getLogoUrl()).isEqualTo(DEFAULT_LOGO_URL);
+        assertThat(testTickerProfile.getIndustry()).isEqualTo(UPDATED_INDUSTRY);
+        assertThat(testTickerProfile.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTickerProfile.getPhone()).isEqualTo(DEFAULT_PHONE);
         assertThat(testTickerProfile.getWebsite()).isEqualTo(DEFAULT_WEBSITE);
         assertThat(testTickerProfile.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testTickerProfile.getFullTimeEmployees()).isEqualTo(DEFAULT_FULL_TIME_EMPLOYEES);
+        assertThat(testTickerProfile.getFullTimeEmployees()).isEqualTo(UPDATED_FULL_TIME_EMPLOYEES);
     }
 
     @Test
@@ -361,6 +376,7 @@ class TickerProfileResourceIT {
 
         partialUpdatedTickerProfile
             .tickerSymbol(UPDATED_TICKER_SYMBOL)
+            .logoUrl(UPDATED_LOGO_URL)
             .industry(UPDATED_INDUSTRY)
             .name(UPDATED_NAME)
             .phone(UPDATED_PHONE)
@@ -381,6 +397,7 @@ class TickerProfileResourceIT {
         assertThat(tickerProfileList).hasSize(databaseSizeBeforeUpdate);
         TickerProfile testTickerProfile = tickerProfileList.get(tickerProfileList.size() - 1);
         assertThat(testTickerProfile.getTickerSymbol()).isEqualTo(UPDATED_TICKER_SYMBOL);
+        assertThat(testTickerProfile.getLogoUrl()).isEqualTo(UPDATED_LOGO_URL);
         assertThat(testTickerProfile.getIndustry()).isEqualTo(UPDATED_INDUSTRY);
         assertThat(testTickerProfile.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTickerProfile.getPhone()).isEqualTo(UPDATED_PHONE);

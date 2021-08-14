@@ -91,11 +91,18 @@ export const TickerProfileUpdate = (props: RouteComponentProps<{ id: string }>) 
                   required: { value: true, message: 'This field is required.' },
                 }}
               />
+              <ValidatedField label="Logo Url" id="ticker-profile-logoUrl" name="logoUrl" data-cy="logoUrl" type="text" />
               <ValidatedField label="Industry" id="ticker-profile-industry" name="industry" data-cy="industry" type="text" />
               <ValidatedField label="Name" id="ticker-profile-name" name="name" data-cy="name" type="text" />
               <ValidatedField label="Phone" id="ticker-profile-phone" name="phone" data-cy="phone" type="text" />
               <ValidatedField label="Website" id="ticker-profile-website" name="website" data-cy="website" type="text" />
-              <ValidatedField label="Description" id="ticker-profile-description" name="description" data-cy="description" type="text" />
+              <ValidatedField
+                label="Description"
+                id="ticker-profile-description"
+                name="description"
+                data-cy="description"
+                type="textarea"
+              />
               <ValidatedField
                 label="Full Time Employees"
                 id="ticker-profile-fullTimeEmployees"

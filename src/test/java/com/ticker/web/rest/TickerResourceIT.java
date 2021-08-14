@@ -40,8 +40,11 @@ class TickerResourceIT {
     private static final ZonedDateTime DEFAULT_UPDATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_UPDATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final Double DEFAULT_CHANGE = 1D;
-    private static final Double UPDATED_CHANGE = 2D;
+    private static final String DEFAULT_PRICE_CHANGE = "AAAAAAAAAA";
+    private static final String UPDATED_PRICE_CHANGE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_PRICE_PERCENT_CHANGE = "AAAAAAAAAA";
+    private static final String UPDATED_PRICE_PERCENT_CHANGE = "BBBBBBBBBB";
 
     private static final Double DEFAULT_MARKET_PRICE = 1D;
     private static final Double UPDATED_MARKET_PRICE = 2D;
@@ -81,12 +84,6 @@ class TickerResourceIT {
 
     private static final Double DEFAULT_ASK_VOL = 1D;
     private static final Double UPDATED_ASK_VOL = 2D;
-
-    private static final Double DEFAULT_DAY_LOW = 1D;
-    private static final Double UPDATED_DAY_LOW = 2D;
-
-    private static final Double DEFAULT_DAY_HIGH = 1D;
-    private static final Double UPDATED_DAY_HIGH = 2D;
 
     private static final Double DEFAULT_FIFTY_TWO_WEEK_LOW = 1D;
     private static final Double UPDATED_FIFTY_TWO_WEEK_LOW = 2D;
@@ -130,7 +127,8 @@ class TickerResourceIT {
         Ticker ticker = new Ticker()
             .symbol(DEFAULT_SYMBOL)
             .updatedAt(DEFAULT_UPDATED_AT)
-            .change(DEFAULT_CHANGE)
+            .priceChange(DEFAULT_PRICE_CHANGE)
+            .pricePercentChange(DEFAULT_PRICE_PERCENT_CHANGE)
             .marketPrice(DEFAULT_MARKET_PRICE)
             .marketCap(DEFAULT_MARKET_CAP)
             .volume(DEFAULT_VOLUME)
@@ -144,8 +142,6 @@ class TickerResourceIT {
             .ask(DEFAULT_ASK)
             .bidVol(DEFAULT_BID_VOL)
             .askVol(DEFAULT_ASK_VOL)
-            .dayLow(DEFAULT_DAY_LOW)
-            .dayHigh(DEFAULT_DAY_HIGH)
             .fiftyTwoWeekLow(DEFAULT_FIFTY_TWO_WEEK_LOW)
             .fiftyTwoWeekHigh(DEFAULT_FIFTY_TWO_WEEK_HIGH)
             .beta(DEFAULT_BETA)
@@ -164,7 +160,8 @@ class TickerResourceIT {
         Ticker ticker = new Ticker()
             .symbol(UPDATED_SYMBOL)
             .updatedAt(UPDATED_UPDATED_AT)
-            .change(UPDATED_CHANGE)
+            .priceChange(UPDATED_PRICE_CHANGE)
+            .pricePercentChange(UPDATED_PRICE_PERCENT_CHANGE)
             .marketPrice(UPDATED_MARKET_PRICE)
             .marketCap(UPDATED_MARKET_CAP)
             .volume(UPDATED_VOLUME)
@@ -178,8 +175,6 @@ class TickerResourceIT {
             .ask(UPDATED_ASK)
             .bidVol(UPDATED_BID_VOL)
             .askVol(UPDATED_ASK_VOL)
-            .dayLow(UPDATED_DAY_LOW)
-            .dayHigh(UPDATED_DAY_HIGH)
             .fiftyTwoWeekLow(UPDATED_FIFTY_TWO_WEEK_LOW)
             .fiftyTwoWeekHigh(UPDATED_FIFTY_TWO_WEEK_HIGH)
             .beta(UPDATED_BETA)
@@ -208,7 +203,8 @@ class TickerResourceIT {
         Ticker testTicker = tickerList.get(tickerList.size() - 1);
         assertThat(testTicker.getSymbol()).isEqualTo(DEFAULT_SYMBOL);
         assertThat(testTicker.getUpdatedAt()).isEqualTo(DEFAULT_UPDATED_AT);
-        assertThat(testTicker.getChange()).isEqualTo(DEFAULT_CHANGE);
+        assertThat(testTicker.getPriceChange()).isEqualTo(DEFAULT_PRICE_CHANGE);
+        assertThat(testTicker.getPricePercentChange()).isEqualTo(DEFAULT_PRICE_PERCENT_CHANGE);
         assertThat(testTicker.getMarketPrice()).isEqualTo(DEFAULT_MARKET_PRICE);
         assertThat(testTicker.getMarketCap()).isEqualTo(DEFAULT_MARKET_CAP);
         assertThat(testTicker.getVolume()).isEqualTo(DEFAULT_VOLUME);
@@ -222,8 +218,6 @@ class TickerResourceIT {
         assertThat(testTicker.getAsk()).isEqualTo(DEFAULT_ASK);
         assertThat(testTicker.getBidVol()).isEqualTo(DEFAULT_BID_VOL);
         assertThat(testTicker.getAskVol()).isEqualTo(DEFAULT_ASK_VOL);
-        assertThat(testTicker.getDayLow()).isEqualTo(DEFAULT_DAY_LOW);
-        assertThat(testTicker.getDayHigh()).isEqualTo(DEFAULT_DAY_HIGH);
         assertThat(testTicker.getFiftyTwoWeekLow()).isEqualTo(DEFAULT_FIFTY_TWO_WEEK_LOW);
         assertThat(testTicker.getFiftyTwoWeekHigh()).isEqualTo(DEFAULT_FIFTY_TWO_WEEK_HIGH);
         assertThat(testTicker.getBeta()).isEqualTo(DEFAULT_BETA);
@@ -280,7 +274,8 @@ class TickerResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(ticker.getId().intValue())))
             .andExpect(jsonPath("$.[*].symbol").value(hasItem(DEFAULT_SYMBOL)))
             .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(sameInstant(DEFAULT_UPDATED_AT))))
-            .andExpect(jsonPath("$.[*].change").value(hasItem(DEFAULT_CHANGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].priceChange").value(hasItem(DEFAULT_PRICE_CHANGE)))
+            .andExpect(jsonPath("$.[*].pricePercentChange").value(hasItem(DEFAULT_PRICE_PERCENT_CHANGE)))
             .andExpect(jsonPath("$.[*].marketPrice").value(hasItem(DEFAULT_MARKET_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].marketCap").value(hasItem(DEFAULT_MARKET_CAP)))
             .andExpect(jsonPath("$.[*].volume").value(hasItem(DEFAULT_VOLUME)))
@@ -294,8 +289,6 @@ class TickerResourceIT {
             .andExpect(jsonPath("$.[*].ask").value(hasItem(DEFAULT_ASK.doubleValue())))
             .andExpect(jsonPath("$.[*].bidVol").value(hasItem(DEFAULT_BID_VOL.doubleValue())))
             .andExpect(jsonPath("$.[*].askVol").value(hasItem(DEFAULT_ASK_VOL.doubleValue())))
-            .andExpect(jsonPath("$.[*].dayLow").value(hasItem(DEFAULT_DAY_LOW.doubleValue())))
-            .andExpect(jsonPath("$.[*].dayHigh").value(hasItem(DEFAULT_DAY_HIGH.doubleValue())))
             .andExpect(jsonPath("$.[*].fiftyTwoWeekLow").value(hasItem(DEFAULT_FIFTY_TWO_WEEK_LOW.doubleValue())))
             .andExpect(jsonPath("$.[*].fiftyTwoWeekHigh").value(hasItem(DEFAULT_FIFTY_TWO_WEEK_HIGH.doubleValue())))
             .andExpect(jsonPath("$.[*].beta").value(hasItem(DEFAULT_BETA.doubleValue())))
@@ -317,7 +310,8 @@ class TickerResourceIT {
             .andExpect(jsonPath("$.id").value(ticker.getId().intValue()))
             .andExpect(jsonPath("$.symbol").value(DEFAULT_SYMBOL))
             .andExpect(jsonPath("$.updatedAt").value(sameInstant(DEFAULT_UPDATED_AT)))
-            .andExpect(jsonPath("$.change").value(DEFAULT_CHANGE.doubleValue()))
+            .andExpect(jsonPath("$.priceChange").value(DEFAULT_PRICE_CHANGE))
+            .andExpect(jsonPath("$.pricePercentChange").value(DEFAULT_PRICE_PERCENT_CHANGE))
             .andExpect(jsonPath("$.marketPrice").value(DEFAULT_MARKET_PRICE.doubleValue()))
             .andExpect(jsonPath("$.marketCap").value(DEFAULT_MARKET_CAP))
             .andExpect(jsonPath("$.volume").value(DEFAULT_VOLUME))
@@ -331,8 +325,6 @@ class TickerResourceIT {
             .andExpect(jsonPath("$.ask").value(DEFAULT_ASK.doubleValue()))
             .andExpect(jsonPath("$.bidVol").value(DEFAULT_BID_VOL.doubleValue()))
             .andExpect(jsonPath("$.askVol").value(DEFAULT_ASK_VOL.doubleValue()))
-            .andExpect(jsonPath("$.dayLow").value(DEFAULT_DAY_LOW.doubleValue()))
-            .andExpect(jsonPath("$.dayHigh").value(DEFAULT_DAY_HIGH.doubleValue()))
             .andExpect(jsonPath("$.fiftyTwoWeekLow").value(DEFAULT_FIFTY_TWO_WEEK_LOW.doubleValue()))
             .andExpect(jsonPath("$.fiftyTwoWeekHigh").value(DEFAULT_FIFTY_TWO_WEEK_HIGH.doubleValue()))
             .andExpect(jsonPath("$.beta").value(DEFAULT_BETA.doubleValue()))
@@ -362,7 +354,8 @@ class TickerResourceIT {
         updatedTicker
             .symbol(UPDATED_SYMBOL)
             .updatedAt(UPDATED_UPDATED_AT)
-            .change(UPDATED_CHANGE)
+            .priceChange(UPDATED_PRICE_CHANGE)
+            .pricePercentChange(UPDATED_PRICE_PERCENT_CHANGE)
             .marketPrice(UPDATED_MARKET_PRICE)
             .marketCap(UPDATED_MARKET_CAP)
             .volume(UPDATED_VOLUME)
@@ -376,8 +369,6 @@ class TickerResourceIT {
             .ask(UPDATED_ASK)
             .bidVol(UPDATED_BID_VOL)
             .askVol(UPDATED_ASK_VOL)
-            .dayLow(UPDATED_DAY_LOW)
-            .dayHigh(UPDATED_DAY_HIGH)
             .fiftyTwoWeekLow(UPDATED_FIFTY_TWO_WEEK_LOW)
             .fiftyTwoWeekHigh(UPDATED_FIFTY_TWO_WEEK_HIGH)
             .beta(UPDATED_BETA)
@@ -398,7 +389,8 @@ class TickerResourceIT {
         Ticker testTicker = tickerList.get(tickerList.size() - 1);
         assertThat(testTicker.getSymbol()).isEqualTo(UPDATED_SYMBOL);
         assertThat(testTicker.getUpdatedAt()).isEqualTo(UPDATED_UPDATED_AT);
-        assertThat(testTicker.getChange()).isEqualTo(UPDATED_CHANGE);
+        assertThat(testTicker.getPriceChange()).isEqualTo(UPDATED_PRICE_CHANGE);
+        assertThat(testTicker.getPricePercentChange()).isEqualTo(UPDATED_PRICE_PERCENT_CHANGE);
         assertThat(testTicker.getMarketPrice()).isEqualTo(UPDATED_MARKET_PRICE);
         assertThat(testTicker.getMarketCap()).isEqualTo(UPDATED_MARKET_CAP);
         assertThat(testTicker.getVolume()).isEqualTo(UPDATED_VOLUME);
@@ -412,8 +404,6 @@ class TickerResourceIT {
         assertThat(testTicker.getAsk()).isEqualTo(UPDATED_ASK);
         assertThat(testTicker.getBidVol()).isEqualTo(UPDATED_BID_VOL);
         assertThat(testTicker.getAskVol()).isEqualTo(UPDATED_ASK_VOL);
-        assertThat(testTicker.getDayLow()).isEqualTo(UPDATED_DAY_LOW);
-        assertThat(testTicker.getDayHigh()).isEqualTo(UPDATED_DAY_HIGH);
         assertThat(testTicker.getFiftyTwoWeekLow()).isEqualTo(UPDATED_FIFTY_TWO_WEEK_LOW);
         assertThat(testTicker.getFiftyTwoWeekHigh()).isEqualTo(UPDATED_FIFTY_TWO_WEEK_HIGH);
         assertThat(testTicker.getBeta()).isEqualTo(UPDATED_BETA);
@@ -491,16 +481,16 @@ class TickerResourceIT {
 
         partialUpdatedTicker
             .symbol(UPDATED_SYMBOL)
-            .change(UPDATED_CHANGE)
-            .marketPrice(UPDATED_MARKET_PRICE)
-            .low(UPDATED_LOW)
-            .open(UPDATED_OPEN)
+            .priceChange(UPDATED_PRICE_CHANGE)
+            .pricePercentChange(UPDATED_PRICE_PERCENT_CHANGE)
+            .avgVolume(UPDATED_AVG_VOLUME)
+            .high(UPDATED_HIGH)
+            .previousClose(UPDATED_PREVIOUS_CLOSE)
             .bid(UPDATED_BID)
             .ask(UPDATED_ASK)
-            .bidVol(UPDATED_BID_VOL)
-            .fiftyTwoWeekLow(UPDATED_FIFTY_TWO_WEEK_LOW)
             .fiftyTwoWeekHigh(UPDATED_FIFTY_TWO_WEEK_HIGH)
-            .peRatio(UPDATED_PE_RATIO);
+            .beta(UPDATED_BETA)
+            .eps(UPDATED_EPS);
 
         restTickerMockMvc
             .perform(
@@ -516,27 +506,26 @@ class TickerResourceIT {
         Ticker testTicker = tickerList.get(tickerList.size() - 1);
         assertThat(testTicker.getSymbol()).isEqualTo(UPDATED_SYMBOL);
         assertThat(testTicker.getUpdatedAt()).isEqualTo(DEFAULT_UPDATED_AT);
-        assertThat(testTicker.getChange()).isEqualTo(UPDATED_CHANGE);
-        assertThat(testTicker.getMarketPrice()).isEqualTo(UPDATED_MARKET_PRICE);
+        assertThat(testTicker.getPriceChange()).isEqualTo(UPDATED_PRICE_CHANGE);
+        assertThat(testTicker.getPricePercentChange()).isEqualTo(UPDATED_PRICE_PERCENT_CHANGE);
+        assertThat(testTicker.getMarketPrice()).isEqualTo(DEFAULT_MARKET_PRICE);
         assertThat(testTicker.getMarketCap()).isEqualTo(DEFAULT_MARKET_CAP);
         assertThat(testTicker.getVolume()).isEqualTo(DEFAULT_VOLUME);
-        assertThat(testTicker.getAvgVolume()).isEqualTo(DEFAULT_AVG_VOLUME);
-        assertThat(testTicker.getLow()).isEqualTo(UPDATED_LOW);
-        assertThat(testTicker.getHigh()).isEqualTo(DEFAULT_HIGH);
-        assertThat(testTicker.getOpen()).isEqualTo(UPDATED_OPEN);
+        assertThat(testTicker.getAvgVolume()).isEqualTo(UPDATED_AVG_VOLUME);
+        assertThat(testTicker.getLow()).isEqualTo(DEFAULT_LOW);
+        assertThat(testTicker.getHigh()).isEqualTo(UPDATED_HIGH);
+        assertThat(testTicker.getOpen()).isEqualTo(DEFAULT_OPEN);
         assertThat(testTicker.getClose()).isEqualTo(DEFAULT_CLOSE);
-        assertThat(testTicker.getPreviousClose()).isEqualTo(DEFAULT_PREVIOUS_CLOSE);
+        assertThat(testTicker.getPreviousClose()).isEqualTo(UPDATED_PREVIOUS_CLOSE);
         assertThat(testTicker.getBid()).isEqualTo(UPDATED_BID);
         assertThat(testTicker.getAsk()).isEqualTo(UPDATED_ASK);
-        assertThat(testTicker.getBidVol()).isEqualTo(UPDATED_BID_VOL);
+        assertThat(testTicker.getBidVol()).isEqualTo(DEFAULT_BID_VOL);
         assertThat(testTicker.getAskVol()).isEqualTo(DEFAULT_ASK_VOL);
-        assertThat(testTicker.getDayLow()).isEqualTo(DEFAULT_DAY_LOW);
-        assertThat(testTicker.getDayHigh()).isEqualTo(DEFAULT_DAY_HIGH);
-        assertThat(testTicker.getFiftyTwoWeekLow()).isEqualTo(UPDATED_FIFTY_TWO_WEEK_LOW);
+        assertThat(testTicker.getFiftyTwoWeekLow()).isEqualTo(DEFAULT_FIFTY_TWO_WEEK_LOW);
         assertThat(testTicker.getFiftyTwoWeekHigh()).isEqualTo(UPDATED_FIFTY_TWO_WEEK_HIGH);
-        assertThat(testTicker.getBeta()).isEqualTo(DEFAULT_BETA);
-        assertThat(testTicker.getPeRatio()).isEqualTo(UPDATED_PE_RATIO);
-        assertThat(testTicker.getEps()).isEqualTo(DEFAULT_EPS);
+        assertThat(testTicker.getBeta()).isEqualTo(UPDATED_BETA);
+        assertThat(testTicker.getPeRatio()).isEqualTo(DEFAULT_PE_RATIO);
+        assertThat(testTicker.getEps()).isEqualTo(UPDATED_EPS);
     }
 
     @Test
@@ -554,7 +543,8 @@ class TickerResourceIT {
         partialUpdatedTicker
             .symbol(UPDATED_SYMBOL)
             .updatedAt(UPDATED_UPDATED_AT)
-            .change(UPDATED_CHANGE)
+            .priceChange(UPDATED_PRICE_CHANGE)
+            .pricePercentChange(UPDATED_PRICE_PERCENT_CHANGE)
             .marketPrice(UPDATED_MARKET_PRICE)
             .marketCap(UPDATED_MARKET_CAP)
             .volume(UPDATED_VOLUME)
@@ -568,8 +558,6 @@ class TickerResourceIT {
             .ask(UPDATED_ASK)
             .bidVol(UPDATED_BID_VOL)
             .askVol(UPDATED_ASK_VOL)
-            .dayLow(UPDATED_DAY_LOW)
-            .dayHigh(UPDATED_DAY_HIGH)
             .fiftyTwoWeekLow(UPDATED_FIFTY_TWO_WEEK_LOW)
             .fiftyTwoWeekHigh(UPDATED_FIFTY_TWO_WEEK_HIGH)
             .beta(UPDATED_BETA)
@@ -590,7 +578,8 @@ class TickerResourceIT {
         Ticker testTicker = tickerList.get(tickerList.size() - 1);
         assertThat(testTicker.getSymbol()).isEqualTo(UPDATED_SYMBOL);
         assertThat(testTicker.getUpdatedAt()).isEqualTo(UPDATED_UPDATED_AT);
-        assertThat(testTicker.getChange()).isEqualTo(UPDATED_CHANGE);
+        assertThat(testTicker.getPriceChange()).isEqualTo(UPDATED_PRICE_CHANGE);
+        assertThat(testTicker.getPricePercentChange()).isEqualTo(UPDATED_PRICE_PERCENT_CHANGE);
         assertThat(testTicker.getMarketPrice()).isEqualTo(UPDATED_MARKET_PRICE);
         assertThat(testTicker.getMarketCap()).isEqualTo(UPDATED_MARKET_CAP);
         assertThat(testTicker.getVolume()).isEqualTo(UPDATED_VOLUME);
@@ -604,8 +593,6 @@ class TickerResourceIT {
         assertThat(testTicker.getAsk()).isEqualTo(UPDATED_ASK);
         assertThat(testTicker.getBidVol()).isEqualTo(UPDATED_BID_VOL);
         assertThat(testTicker.getAskVol()).isEqualTo(UPDATED_ASK_VOL);
-        assertThat(testTicker.getDayLow()).isEqualTo(UPDATED_DAY_LOW);
-        assertThat(testTicker.getDayHigh()).isEqualTo(UPDATED_DAY_HIGH);
         assertThat(testTicker.getFiftyTwoWeekLow()).isEqualTo(UPDATED_FIFTY_TWO_WEEK_LOW);
         assertThat(testTicker.getFiftyTwoWeekHigh()).isEqualTo(UPDATED_FIFTY_TWO_WEEK_HIGH);
         assertThat(testTicker.getBeta()).isEqualTo(UPDATED_BETA);

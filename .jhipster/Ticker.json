@@ -11,8 +11,12 @@
       "fieldType": "ZonedDateTime"
     },
     {
-      "fieldName": "change",
-      "fieldType": "Double"
+      "fieldName": "priceChange",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "pricePercentChange",
+      "fieldType": "String"
     },
     {
       "fieldName": "marketPrice",
@@ -67,14 +71,6 @@
       "fieldType": "Double"
     },
     {
-      "fieldName": "dayLow",
-      "fieldType": "Double"
-    },
-    {
-      "fieldName": "dayHigh",
-      "fieldType": "Double"
-    },
-    {
       "fieldName": "fiftyTwoWeekLow",
       "fieldType": "Double"
     },
@@ -99,7 +95,7 @@
     {
       "relationshipType": "one-to-one",
       "otherEntityName": "tickerProfile",
-      "otherEntityRelationshipName": "ticker",
+      "otherEntityRelationshipName": "symbol",
       "relationshipName": "tickerSymbol",
       "ownerSide": true
     },

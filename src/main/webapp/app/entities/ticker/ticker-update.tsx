@@ -108,7 +108,14 @@ export const TickerUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 type="datetime-local"
                 placeholder="YYYY-MM-DD HH:mm"
               />
-              <ValidatedField label="Change" id="ticker-change" name="change" data-cy="change" type="text" />
+              <ValidatedField label="Price Change" id="ticker-priceChange" name="priceChange" data-cy="priceChange" type="text" />
+              <ValidatedField
+                label="Price Percent Change"
+                id="ticker-pricePercentChange"
+                name="pricePercentChange"
+                data-cy="pricePercentChange"
+                type="text"
+              />
               <ValidatedField label="Market Price" id="ticker-marketPrice" name="marketPrice" data-cy="marketPrice" type="text" />
               <ValidatedField label="Market Cap" id="ticker-marketCap" name="marketCap" data-cy="marketCap" type="text" />
               <ValidatedField label="Volume" id="ticker-volume" name="volume" data-cy="volume" type="text" />
@@ -122,8 +129,6 @@ export const TickerUpdate = (props: RouteComponentProps<{ id: string }>) => {
               <ValidatedField label="Ask" id="ticker-ask" name="ask" data-cy="ask" type="text" />
               <ValidatedField label="Bid Vol" id="ticker-bidVol" name="bidVol" data-cy="bidVol" type="text" />
               <ValidatedField label="Ask Vol" id="ticker-askVol" name="askVol" data-cy="askVol" type="text" />
-              <ValidatedField label="Day Low" id="ticker-dayLow" name="dayLow" data-cy="dayLow" type="text" />
-              <ValidatedField label="Day High" id="ticker-dayHigh" name="dayHigh" data-cy="dayHigh" type="text" />
               <ValidatedField
                 label="Fifty Two Week Low"
                 id="ticker-fiftyTwoWeekLow"

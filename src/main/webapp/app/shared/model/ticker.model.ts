@@ -6,7 +6,8 @@ export interface ITicker {
   id?: number;
   symbol?: string;
   updatedAt?: string | null;
-  change?: number | null;
+  priceChange?: string | null;
+  pricePercentChange?: string | null;
   marketPrice?: number | null;
   marketCap?: string | null;
   volume?: number | null;
@@ -20,8 +21,6 @@ export interface ITicker {
   ask?: number | null;
   bidVol?: number | null;
   askVol?: number | null;
-  dayLow?: number | null;
-  dayHigh?: number | null;
   fiftyTwoWeekLow?: number | null;
   fiftyTwoWeekHigh?: number | null;
   beta?: number | null;

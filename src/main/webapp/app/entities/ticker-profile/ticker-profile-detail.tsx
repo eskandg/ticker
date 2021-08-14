@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import {} from 'react-jhipster';
+import { byteSize } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getEntity } from './ticker-profile.reducer';
@@ -29,6 +29,10 @@ export const TickerProfileDetail = (props: RouteComponentProps<{ id: string }>) 
             <span id="tickerSymbol">Ticker Symbol</span>
           </dt>
           <dd>{tickerProfileEntity.tickerSymbol}</dd>
+          <dt>
+            <span id="logoUrl">Logo Url</span>
+          </dt>
+          <dd>{tickerProfileEntity.logoUrl}</dd>
           <dt>
             <span id="industry">Industry</span>
           </dt>

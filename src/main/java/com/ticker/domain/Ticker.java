@@ -32,8 +32,11 @@ public class Ticker implements Serializable {
     @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
 
-    @Column(name = "change")
-    private Double change;
+    @Column(name = "price_change")
+    private String priceChange;
+
+    @Column(name = "price_percent_change")
+    private String pricePercentChange;
 
     @Column(name = "market_price")
     private Double marketPrice;
@@ -74,12 +77,6 @@ public class Ticker implements Serializable {
     @Column(name = "ask_vol")
     private Double askVol;
 
-    @Column(name = "day_low")
-    private Double dayLow;
-
-    @Column(name = "day_high")
-    private Double dayHigh;
-
     @Column(name = "fifty_two_week_low")
     private Double fiftyTwoWeekLow;
 
@@ -95,7 +92,7 @@ public class Ticker implements Serializable {
     @Column(name = "eps")
     private Float eps;
 
-    @JsonIgnoreProperties(value = { "ticker" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "symbol" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private TickerProfile tickerSymbol;
@@ -145,17 +142,30 @@ public class Ticker implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Double getChange() {
-        return this.change;
+    public String getPriceChange() {
+        return this.priceChange;
     }
 
-    public Ticker change(Double change) {
-        this.change = change;
+    public Ticker priceChange(String priceChange) {
+        this.priceChange = priceChange;
         return this;
     }
 
-    public void setChange(Double change) {
-        this.change = change;
+    public void setPriceChange(String priceChange) {
+        this.priceChange = priceChange;
+    }
+
+    public String getPricePercentChange() {
+        return this.pricePercentChange;
+    }
+
+    public Ticker pricePercentChange(String pricePercentChange) {
+        this.pricePercentChange = pricePercentChange;
+        return this;
+    }
+
+    public void setPricePercentChange(String pricePercentChange) {
+        this.pricePercentChange = pricePercentChange;
     }
 
     public Double getMarketPrice() {
@@ -327,32 +337,6 @@ public class Ticker implements Serializable {
         this.askVol = askVol;
     }
 
-    public Double getDayLow() {
-        return this.dayLow;
-    }
-
-    public Ticker dayLow(Double dayLow) {
-        this.dayLow = dayLow;
-        return this;
-    }
-
-    public void setDayLow(Double dayLow) {
-        this.dayLow = dayLow;
-    }
-
-    public Double getDayHigh() {
-        return this.dayHigh;
-    }
-
-    public Ticker dayHigh(Double dayHigh) {
-        this.dayHigh = dayHigh;
-        return this;
-    }
-
-    public void setDayHigh(Double dayHigh) {
-        this.dayHigh = dayHigh;
-    }
-
     public Double getFiftyTwoWeekLow() {
         return this.fiftyTwoWeekLow;
     }
@@ -488,7 +472,8 @@ public class Ticker implements Serializable {
             "id=" + getId() +
             ", symbol='" + getSymbol() + "'" +
             ", updatedAt='" + getUpdatedAt() + "'" +
-            ", change=" + getChange() +
+            ", priceChange='" + getPriceChange() + "'" +
+            ", pricePercentChange='" + getPricePercentChange() + "'" +
             ", marketPrice=" + getMarketPrice() +
             ", marketCap='" + getMarketCap() + "'" +
             ", volume=" + getVolume() +
@@ -502,8 +487,6 @@ public class Ticker implements Serializable {
             ", ask=" + getAsk() +
             ", bidVol=" + getBidVol() +
             ", askVol=" + getAskVol() +
-            ", dayLow=" + getDayLow() +
-            ", dayHigh=" + getDayHigh() +
             ", fiftyTwoWeekLow=" + getFiftyTwoWeekLow() +
             ", fiftyTwoWeekHigh=" + getFiftyTwoWeekHigh() +
             ", beta=" + getBeta() +

@@ -1,7 +1,8 @@
 entity Ticker {
     symbol String required
     updatedAt ZonedDateTime
-	change Double
+	priceChange String
+    pricePercentChange String
     marketPrice Double
     marketCap String
     volume Integer
@@ -15,8 +16,6 @@ entity Ticker {
     ask Double
     bidVol Double
     askVol Double
-    dayLow Double
-    dayHigh Double
     fiftyTwoWeekLow Double
     fiftyTwoWeekHigh Double
     beta Float // 5 year monthly variation
@@ -26,11 +25,12 @@ entity Ticker {
 
 entity TickerProfile {
 	tickerSymbol String required unique
+    logoUrl String
     industry String
     name String
     phone String
     website String
-    description String
+    description TextBlob
     fullTimeEmployees Integer
 }
 
@@ -38,7 +38,7 @@ entity WatchList {
 }
 
 relationship OneToOne {
-	Ticker{tickerSymbol} to TickerProfile{ticker}
+	Ticker{tickerSymbol} to TickerProfile{symbol}
 }
 
 relationship ManyToOne {

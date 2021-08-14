@@ -17,6 +17,9 @@
             <column name="ticker_symbol" type="varchar(255)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="ux_ticker_profile__ticker_symbol" />
             </column>
+            <column name="logo_url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="industry" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -29,7 +32,7 @@
             <column name="website" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="${clobType}">
                 <constraints nullable="true" />
             </column>
             <column name="full_time_employees" type="integer">
@@ -56,11 +59,12 @@
                   tableName="ticker_profile">
             <column name="id" type="numeric"/>
             <column name="ticker_symbol" type="string"/>
+            <column name="logo_url" type="string"/>
             <column name="industry" type="string"/>
             <column name="name" type="string"/>
             <column name="phone" type="string"/>
             <column name="website" type="string"/>
-            <column name="description" type="string"/>
+            <column name="description" type="clob"/>
             <column name="full_time_employees" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

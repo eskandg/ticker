@@ -132,8 +132,11 @@ public class TickerResource {
                     if (ticker.getUpdatedAt() != null) {
                         existingTicker.setUpdatedAt(ticker.getUpdatedAt());
                     }
-                    if (ticker.getChange() != null) {
-                        existingTicker.setChange(ticker.getChange());
+                    if (ticker.getPriceChange() != null) {
+                        existingTicker.setPriceChange(ticker.getPriceChange());
+                    }
+                    if (ticker.getPricePercentChange() != null) {
+                        existingTicker.setPricePercentChange(ticker.getPricePercentChange());
                     }
                     if (ticker.getMarketPrice() != null) {
                         existingTicker.setMarketPrice(ticker.getMarketPrice());
@@ -174,12 +177,6 @@ public class TickerResource {
                     if (ticker.getAskVol() != null) {
                         existingTicker.setAskVol(ticker.getAskVol());
                     }
-                    if (ticker.getDayLow() != null) {
-                        existingTicker.setDayLow(ticker.getDayLow());
-                    }
-                    if (ticker.getDayHigh() != null) {
-                        existingTicker.setDayHigh(ticker.getDayHigh());
-                    }
                     if (ticker.getFiftyTwoWeekLow() != null) {
                         existingTicker.setFiftyTwoWeekLow(ticker.getFiftyTwoWeekLow());
                     }
@@ -219,15 +216,15 @@ public class TickerResource {
     }
 
     /**
-     * {@code GET  /tickers/:id} : get the "id" ticker.
+     * {@code GET  /tickers/:symbol} : get the "symbol" ticker by maximum date.
      *
-     * @param id the id of the ticker to retrieve.
+     * @param symbol the symbol of the ticker to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticker, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/tickers/{id}")
-    public ResponseEntity<Ticker> getTicker(@PathVariable Long id) {
-        log.debug("REST request to get Ticker : {}", id);
-        Optional<Ticker> ticker = tickerRepository.findById(id);
+    @GetMapping("/tickers/{symbol}")
+    public ResponseEntity<Ticker> getTicker(@PathVariable String symbol) {
+        log.debug("REST request to get Ticker : {}", symbol);
+        Optional<Ticker> ticker = tickerRepository.findFirstBySymbolOrderByUpdatedAtDesc(symbol);
         return ResponseUtil.wrapOrNotFound(ticker);
     }
 

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 /**
  * A TickerProfile.
@@ -26,6 +27,9 @@ public class TickerProfile implements Serializable {
     @Column(name = "ticker_symbol", nullable = false, unique = true)
     private String tickerSymbol;
 
+    @Column(name = "logo_url")
+    private String logoUrl;
+
     @Column(name = "industry")
     private String industry;
 
@@ -38,6 +42,8 @@ public class TickerProfile implements Serializable {
     @Column(name = "website")
     private String website;
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "description")
     private String description;
 
@@ -46,7 +52,7 @@ public class TickerProfile implements Serializable {
 
     @JsonIgnoreProperties(value = { "tickerSymbol", "watchedIns" }, allowSetters = true)
     @OneToOne(mappedBy = "tickerSymbol")
-    private Ticker ticker;
+    private Ticker symbol;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -73,6 +79,19 @@ public class TickerProfile implements Serializable {
 
     public void setTickerSymbol(String tickerSymbol) {
         this.tickerSymbol = tickerSymbol;
+    }
+
+    public String getLogoUrl() {
+        return this.logoUrl;
+    }
+
+    public TickerProfile logoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+        return this;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 
     public String getIndustry() {
@@ -153,23 +172,23 @@ public class TickerProfile implements Serializable {
         this.fullTimeEmployees = fullTimeEmployees;
     }
 
-    public Ticker getTicker() {
-        return this.ticker;
+    public Ticker getSymbol() {
+        return this.symbol;
     }
 
-    public TickerProfile ticker(Ticker ticker) {
-        this.setTicker(ticker);
+    public TickerProfile symbol(Ticker ticker) {
+        this.setSymbol(ticker);
         return this;
     }
 
-    public void setTicker(Ticker ticker) {
-        if (this.ticker != null) {
-            this.ticker.setTickerSymbol(null);
+    public void setSymbol(Ticker ticker) {
+        if (this.symbol != null) {
+            this.symbol.setTickerSymbol(null);
         }
         if (ticker != null) {
             ticker.setTickerSymbol(this);
         }
-        this.ticker = ticker;
+        this.symbol = ticker;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -197,6 +216,7 @@ public class TickerProfile implements Serializable {
         return "TickerProfile{" +
             "id=" + getId() +
             ", tickerSymbol='" + getTickerSymbol() + "'" +
+            ", logoUrl='" + getLogoUrl() + "'" +
             ", industry='" + getIndustry() + "'" +
             ", name='" + getName() + "'" +
             ", phone='" + getPhone() + "'" +

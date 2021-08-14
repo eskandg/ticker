@@ -20,7 +20,10 @@
             <column name="updated_at" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="change" type="double">
+            <column name="price_change" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="price_percent_change" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="market_price" type="double">
@@ -60,12 +63,6 @@
                 <constraints nullable="true" />
             </column>
             <column name="ask_vol" type="double">
-                <constraints nullable="true" />
-            </column>
-            <column name="day_low" type="double">
-                <constraints nullable="true" />
-            </column>
-            <column name="day_high" type="double">
                 <constraints nullable="true" />
             </column>
             <column name="fifty_two_week_low" type="double">
@@ -109,7 +106,8 @@
             <column name="id" type="numeric"/>
             <column name="symbol" type="string"/>
             <column name="updated_at" type="${datetimeType}"/>
-            <column name="change" type="numeric"/>
+            <column name="price_change" type="string"/>
+            <column name="price_percent_change" type="string"/>
             <column name="market_price" type="numeric"/>
             <column name="market_cap" type="string"/>
             <column name="volume" type="numeric"/>
@@ -123,8 +121,6 @@
             <column name="ask" type="numeric"/>
             <column name="bid_vol" type="numeric"/>
             <column name="ask_vol" type="numeric"/>
-            <column name="day_low" type="numeric"/>
-            <column name="day_high" type="numeric"/>
             <column name="fifty_two_week_low" type="numeric"/>
             <column name="fifty_two_week_high" type="numeric"/>
             <column name="beta" type="numeric"/>

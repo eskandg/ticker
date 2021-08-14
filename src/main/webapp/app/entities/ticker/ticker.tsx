@@ -47,7 +47,8 @@ export const Ticker = (props: RouteComponentProps<{ url: string }>) => {
                 <th>ID</th>
                 <th>Symbol</th>
                 <th>Updated At</th>
-                <th>Change</th>
+                <th>Price Change</th>
+                <th>Price Percent Change</th>
                 <th>Market Price</th>
                 <th>Market Cap</th>
                 <th>Volume</th>
@@ -61,8 +62,6 @@ export const Ticker = (props: RouteComponentProps<{ url: string }>) => {
                 <th>Ask</th>
                 <th>Bid Vol</th>
                 <th>Ask Vol</th>
-                <th>Day Low</th>
-                <th>Day High</th>
                 <th>Fifty Two Week Low</th>
                 <th>Fifty Two Week High</th>
                 <th>Beta</th>
@@ -82,7 +81,8 @@ export const Ticker = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{ticker.symbol}</td>
                   <td>{ticker.updatedAt ? <TextFormat type="date" value={ticker.updatedAt} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td>{ticker.change}</td>
+                  <td>{ticker.priceChange}</td>
+                  <td>{ticker.pricePercentChange}</td>
                   <td>{ticker.marketPrice}</td>
                   <td>{ticker.marketCap}</td>
                   <td>{ticker.volume}</td>
@@ -96,8 +96,6 @@ export const Ticker = (props: RouteComponentProps<{ url: string }>) => {
                   <td>{ticker.ask}</td>
                   <td>{ticker.bidVol}</td>
                   <td>{ticker.askVol}</td>
-                  <td>{ticker.dayLow}</td>
-                  <td>{ticker.dayHigh}</td>
                   <td>{ticker.fiftyTwoWeekLow}</td>
                   <td>{ticker.fiftyTwoWeekHigh}</td>
                   <td>{ticker.beta}</td>

@@ -34,9 +34,13 @@ export const TickerDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{tickerEntity.updatedAt ? <TextFormat value={tickerEntity.updatedAt} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
           <dt>
-            <span id="change">Change</span>
+            <span id="priceChange">Price Change</span>
           </dt>
-          <dd>{tickerEntity.change}</dd>
+          <dd>{tickerEntity.priceChange}</dd>
+          <dt>
+            <span id="pricePercentChange">Price Percent Change</span>
+          </dt>
+          <dd>{tickerEntity.pricePercentChange}</dd>
           <dt>
             <span id="marketPrice">Market Price</span>
           </dt>
@@ -89,14 +93,6 @@ export const TickerDetail = (props: RouteComponentProps<{ id: string }>) => {
             <span id="askVol">Ask Vol</span>
           </dt>
           <dd>{tickerEntity.askVol}</dd>
-          <dt>
-            <span id="dayLow">Day Low</span>
-          </dt>
-          <dd>{tickerEntity.dayLow}</dd>
-          <dt>
-            <span id="dayHigh">Day High</span>
-          </dt>
-          <dd>{tickerEntity.dayHigh}</dd>
           <dt>
             <span id="fiftyTwoWeekLow">Fifty Two Week Low</span>
           </dt>
