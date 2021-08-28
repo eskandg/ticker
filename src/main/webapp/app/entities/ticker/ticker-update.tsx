@@ -5,7 +5,7 @@ import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ITickerProfile } from 'app/shared/model/ticker-profile.model';
-import { getEntities as getTickerProfiles } from 'app/entities/ticker-profile/ticker-profile.reducer';
+import { getProfiles as getTickerProfiles } from 'app/entities/ticker-profile/ticker-profile.reducer';
 import { IWatchList } from 'app/shared/model/watch-list.model';
 import { getEntities as getWatchLists } from 'app/entities/watch-list/watch-list.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './ticker.reducer';

@@ -18,7 +18,7 @@ const apiUrl = 'api/ticker-profiles';
 
 // Actions
 
-export const getEntities = createAsyncThunk('tickerProfile/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
+export const getProfiles = createAsyncThunk('tickerProfile/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
   return axios.get<ITickerProfile[]>(requestUrl);
 });
@@ -36,7 +36,7 @@ export const createEntity = createAsyncThunk(
   'tickerProfile/create_entity',
   async (entity: ITickerProfile, thunkAPI) => {
     const result = await axios.post<ITickerProfile>(apiUrl, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
+    thunkAPI.dispatch(getProfiles({}));
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -46,7 +46,7 @@ export const updateEntity = createAsyncThunk(
   'tickerProfile/update_entity',
   async (entity: ITickerProfile, thunkAPI) => {
     const result = await axios.put<ITickerProfile>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
+    thunkAPI.dispatch(getProfiles({}));
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -56,7 +56,7 @@ export const partialUpdateEntity = createAsyncThunk(
   'tickerProfile/partial_update_entity',
   async (entity: ITickerProfile, thunkAPI) => {
     const result = await axios.patch<ITickerProfile>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
+    thunkAPI.dispatch(getProfiles({}));
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -67,7 +67,7 @@ export const deleteEntity = createAsyncThunk(
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
     const result = await axios.delete<ITickerProfile>(requestUrl);
-    thunkAPI.dispatch(getEntities({}));
+    thunkAPI.dispatch(getProfiles({}));
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -89,7 +89,7 @@ export const TickerProfileSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getProfiles), (state, action) => {
         return {
           ...state,
           loading: false,
@@ -102,7 +102,7 @@ export const TickerProfileSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getProfiles, getEntity), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

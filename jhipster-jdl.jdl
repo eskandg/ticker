@@ -1,28 +1,3 @@
-entity Ticker {
-    symbol String required
-    updatedAt ZonedDateTime
-	priceChange String
-    pricePercentChange String
-    marketPrice Double
-    marketCap String
-    volume Integer
-    avgVolume Integer
-    low Double
-    high Double
-    open Double
-    close Double
-    previousClose Double
-    bid Double
-    ask Double
-    bidVol Double
-    askVol Double
-    fiftyTwoWeekLow Double
-    fiftyTwoWeekHigh Double
-    beta Float // 5 year monthly variation
-    peRatio Float
-    eps Float
-}
-
 entity TickerProfile {
 	tickerSymbol String required unique
     logoUrl String
@@ -37,14 +12,6 @@ entity TickerProfile {
 entity WatchList {
 }
 
-relationship OneToOne {
-	Ticker{tickerSymbol} to TickerProfile{symbol}
-}
-
 relationship ManyToOne {
 	WatchList{user} to User
-}
-
-relationship ManyToMany {
-	WatchList{ticker} to Ticker{watchedIn}
 }
