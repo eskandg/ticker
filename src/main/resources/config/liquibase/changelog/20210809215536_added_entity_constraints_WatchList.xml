@@ -13,17 +13,5 @@
                                  constraintName="fk_watch_list__user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
-
-        <addForeignKeyConstraint baseColumnNames="watch_list_id"
-                                 baseTableName="rel_watch_list__ticker"
-                                 constraintName="fk_rel_watch_list__ticker__watch_list_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="watch_list"/>
-
-        <addForeignKeyConstraint baseColumnNames="ticker_id"
-                                 baseTableName="rel_watch_list__ticker"
-                                 constraintName="fk_rel_watch_list__ticker__ticker_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="ticker"/>
     </changeSet>
 </databaseChangeLog>

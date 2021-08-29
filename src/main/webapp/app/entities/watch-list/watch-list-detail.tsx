@@ -25,19 +25,12 @@ export const WatchListDetail = (props: RouteComponentProps<{ id: string }>) => {
             <span id="id">ID</span>
           </dt>
           <dd>{watchListEntity.id}</dd>
+          <dt>
+            <span id="tickerSymbol">Ticker Symbol</span>
+          </dt>
+          <dd>{watchListEntity.tickerSymbol}</dd>
           <dt>User</dt>
           <dd>{watchListEntity.user ? watchListEntity.user.id : ''}</dd>
-          <dt>Ticker</dt>
-          <dd>
-            {watchListEntity.tickers
-              ? watchListEntity.tickers.map((val, i) => (
-                  <span key={val.id}>
-                    <a>{val.id}</a>
-                    {watchListEntity.tickers && i === watchListEntity.tickers.length - 1 ? '' : ', '}
-                  </span>
-                ))
-              : null}
-          </dd>
         </dl>
         <Button tag={Link} to="/watch-list" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

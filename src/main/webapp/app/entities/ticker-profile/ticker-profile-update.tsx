@@ -4,8 +4,6 @@ import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { ITicker } from 'app/shared/model/ticker.model';
-import { getEntities as getTickers } from 'app/entities/ticker/ticker.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './ticker-profile.reducer';
 import { ITickerProfile } from 'app/shared/model/ticker-profile.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -17,7 +15,6 @@ export const TickerProfileUpdate = (props: RouteComponentProps<{ id: string }>) 
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const tickers = useAppSelector(state => state.ticker.entities);
   const tickerProfileEntity = useAppSelector(state => state.tickerProfile.entity);
   const loading = useAppSelector(state => state.tickerProfile.loading);
   const updating = useAppSelector(state => state.tickerProfile.updating);
@@ -33,8 +30,6 @@ export const TickerProfileUpdate = (props: RouteComponentProps<{ id: string }>) 
     } else {
       dispatch(getEntity(props.match.params.id));
     }
-
-    dispatch(getTickers({}));
   }, []);
 
   useEffect(() => {

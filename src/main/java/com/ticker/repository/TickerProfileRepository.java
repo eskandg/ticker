@@ -1,7 +1,6 @@
 package com.ticker.repository;
 
 import com.ticker.domain.TickerProfile;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TickerProfileRepository extends JpaRepository<TickerProfile, Long> {
-    Optional<TickerProfile> findByTickerSymbol(String tickerSymbol);
-}
+public interface TickerProfileRepository extends JpaRepository<TickerProfile, Long> {}

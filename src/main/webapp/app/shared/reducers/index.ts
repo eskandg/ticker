@@ -11,8 +11,6 @@ import password, { PasswordState } from 'app/modules/account/password/password.r
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 // prettier-ignore
-import ticker from 'app/entities/ticker/ticker.reducer';
-// prettier-ignore
 import tickerProfile from 'app/entities/ticker-profile/ticker-profile.reducer';
 // prettier-ignore
 import watchList from 'app/entities/watch-list/watch-list.reducer';
@@ -28,7 +26,6 @@ const rootReducer = {
   passwordReset,
   password,
   settings,
-  ticker,
   tickerProfile,
   watchList,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */

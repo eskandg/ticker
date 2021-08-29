@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/config/store';
-import { getEntities as getTickers } from '../../entities/ticker/ticker.reducer';
-import { getProfiles, getEntity as getTickerProfile } from '../../entities/ticker-profile/ticker-profile.reducer';
-import { ITicker } from 'app/shared/model/ticker.model';
+import { getEntities as getProfiles, getEntity as getTickerProfile } from '../../entities/ticker-profile/ticker-profile.reducer';
+
 import { Card, CardBody, CardImg, CardText, CardTitle, Col, Row } from 'reactstrap';
 import { Ticker } from './Ticker/Ticker';
 
 export const Stocks = () => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
-  const tickers = useAppSelector(state => state.ticker.entities);
   const profiles = useAppSelector(state => state.tickerProfile.entities);
   const [deDupedTickers, setTickers] = useState([]);
 
   useEffect(() => {
-    dispatch(getTickers({}));
+    // dispatch(getTickers({}));
     dispatch(getProfiles({}));
   }, []);
 
   return (
     <Row>
-      {tickers.map(ticker => (
-        <Ticker key={ticker.id} ticker={ticker} profileLogo={profiles.find(x => x.tickerSymbol === ticker.symbol)?.logoUrl} />
-      ))}
+      {/*{tickers.map(ticker => (*/}
+      {/*  <Ticker key={ticker.id} ticker={ticker} profileLogo={profiles.find(x => x.tickerSymbol === ticker.symbol)?.logoUrl} />*/}
+      {/*))}*/}
       {/*<Ticker ticker={ticker} profileLogo={profileLogo}/>*/}
       {/*<Ticker ticker={ticker} profileLogo={profileLogo}/>*/}
       {/*<Ticker ticker={ticker} profileLogo={profileLogo}/>*/}

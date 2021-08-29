@@ -36,15 +36,7 @@
       "fieldType": "Integer"
     }
   ],
-  "relationships": [
-    {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "ticker",
-      "otherEntityRelationshipName": "tickerSymbol",
-      "relationshipName": "symbol",
-      "ownerSide": false
-    }
-  ],
+  "relationships": [],
   "entityTableName": "ticker_profile",
   "dto": "no",
   "pagination": "no",

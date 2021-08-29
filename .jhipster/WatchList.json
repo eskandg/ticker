@@ -1,19 +1,18 @@
 {
   "name": "WatchList",
-  "fields": [],
+  "fields": [
+    {
+      "fieldName": "tickerSymbol",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
   "relationships": [
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "user",
       "otherEntityRelationshipName": "watchList",
       "relationshipName": "user"
-    },
-    {
-      "relationshipType": "many-to-many",
-      "otherEntityName": "ticker",
-      "otherEntityRelationshipName": "watchedIn",
-      "relationshipName": "ticker",
-      "ownerSide": true
     }
   ],
   "entityTableName": "watch_list",

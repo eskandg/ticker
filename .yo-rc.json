@@ -44,7 +44,7 @@
     "clientTheme": "none",
     "clientThemeVariant": "",
     "reactive": false,
-    "entities": ["Ticker", "TickerProfile", "WatchList"],
+    "entities": ["TickerProfile", "WatchList"],
     "lastLiquibaseTimestamp": 1628546136000
   },
   "git-provider": "GitHub",

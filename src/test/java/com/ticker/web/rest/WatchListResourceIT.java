@@ -2,27 +2,20 @@ package com.ticker.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ticker.IntegrationTest;
 import com.ticker.domain.WatchList;
 import com.ticker.repository.WatchListRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,10 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link WatchListResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class WatchListResourceIT {
+
+    private static final String DEFAULT_TICKER_SYMBOL = "AAAAAAAAAA";
+    private static final String UPDATED_TICKER_SYMBOL = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/watch-lists";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -45,9 +40,6 @@ class WatchListResourceIT {
 
     @Autowired
     private WatchListRepository watchListRepository;
-
-    @Mock
-    private WatchListRepository watchListRepositoryMock;
 
     @Autowired
     private EntityManager em;
@@ -64,7 +56,7 @@ class WatchListResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static WatchList createEntity(EntityManager em) {
-        WatchList watchList = new WatchList();
+        WatchList watchList = new WatchList().tickerSymbol(DEFAULT_TICKER_SYMBOL);
         return watchList;
     }
 
@@ -75,7 +67,7 @@ class WatchListResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static WatchList createUpdatedEntity(EntityManager em) {
-        WatchList watchList = new WatchList();
+        WatchList watchList = new WatchList().tickerSymbol(UPDATED_TICKER_SYMBOL);
         return watchList;
     }
 
@@ -97,6 +89,7 @@ class WatchListResourceIT {
         List<WatchList> watchListList = watchListRepository.findAll();
         assertThat(watchListList).hasSize(databaseSizeBeforeCreate + 1);
         WatchList testWatchList = watchListList.get(watchListList.size() - 1);
+        assertThat(testWatchList.getTickerSymbol()).isEqualTo(DEFAULT_TICKER_SYMBOL);
     }
 
     @Test
@@ -119,6 +112,23 @@ class WatchListResourceIT {
 
     @Test
     @Transactional
+    void checkTickerSymbolIsRequired() throws Exception {
+        int databaseSizeBeforeTest = watchListRepository.findAll().size();
+        // set the field null
+        watchList.setTickerSymbol(null);
+
+        // Create the WatchList, which fails.
+
+        restWatchListMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(watchList)))
+            .andExpect(status().isBadRequest());
+
+        List<WatchList> watchListList = watchListRepository.findAll();
+        assertThat(watchListList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllWatchLists() throws Exception {
         // Initialize the database
         watchListRepository.saveAndFlush(watchList);
@@ -128,25 +138,8 @@ class WatchListResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(watchList.getId().intValue())));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllWatchListsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(watchListRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restWatchListMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(watchListRepositoryMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllWatchListsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(watchListRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restWatchListMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(watchListRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+            .andExpect(jsonPath("$.[*].id").value(hasItem(watchList.getId().intValue())))
+            .andExpect(jsonPath("$.[*].tickerSymbol").value(hasItem(DEFAULT_TICKER_SYMBOL)));
     }
 
     @Test
@@ -160,7 +153,8 @@ class WatchListResourceIT {
             .perform(get(ENTITY_API_URL_ID, watchList.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(watchList.getId().intValue()));
+            .andExpect(jsonPath("$.id").value(watchList.getId().intValue()))
+            .andExpect(jsonPath("$.tickerSymbol").value(DEFAULT_TICKER_SYMBOL));
     }
 
     @Test
@@ -182,6 +176,7 @@ class WatchListResourceIT {
         WatchList updatedWatchList = watchListRepository.findById(watchList.getId()).get();
         // Disconnect from session so that the updates on updatedWatchList are not directly saved in db
         em.detach(updatedWatchList);
+        updatedWatchList.tickerSymbol(UPDATED_TICKER_SYMBOL);
 
         restWatchListMockMvc
             .perform(
@@ -195,6 +190,7 @@ class WatchListResourceIT {
         List<WatchList> watchListList = watchListRepository.findAll();
         assertThat(watchListList).hasSize(databaseSizeBeforeUpdate);
         WatchList testWatchList = watchListList.get(watchListList.size() - 1);
+        assertThat(testWatchList.getTickerSymbol()).isEqualTo(UPDATED_TICKER_SYMBOL);
     }
 
     @Test
@@ -265,6 +261,8 @@ class WatchListResourceIT {
         WatchList partialUpdatedWatchList = new WatchList();
         partialUpdatedWatchList.setId(watchList.getId());
 
+        partialUpdatedWatchList.tickerSymbol(UPDATED_TICKER_SYMBOL);
+
         restWatchListMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedWatchList.getId())
@@ -277,6 +275,7 @@ class WatchListResourceIT {
         List<WatchList> watchListList = watchListRepository.findAll();
         assertThat(watchListList).hasSize(databaseSizeBeforeUpdate);
         WatchList testWatchList = watchListList.get(watchListList.size() - 1);
+        assertThat(testWatchList.getTickerSymbol()).isEqualTo(UPDATED_TICKER_SYMBOL);
     }
 
     @Test
@@ -291,6 +290,8 @@ class WatchListResourceIT {
         WatchList partialUpdatedWatchList = new WatchList();
         partialUpdatedWatchList.setId(watchList.getId());
 
+        partialUpdatedWatchList.tickerSymbol(UPDATED_TICKER_SYMBOL);
+
         restWatchListMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedWatchList.getId())
@@ -303,6 +304,7 @@ class WatchListResourceIT {
         List<WatchList> watchListList = watchListRepository.findAll();
         assertThat(watchListList).hasSize(databaseSizeBeforeUpdate);
         WatchList testWatchList = watchListList.get(watchListList.size() - 1);
+        assertThat(testWatchList.getTickerSymbol()).isEqualTo(UPDATED_TICKER_SYMBOL);
     }
 
     @Test

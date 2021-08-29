@@ -1,5 +1,3 @@
-import { ITicker } from 'app/shared/model/ticker.model';
-
 export interface ITickerProfile {
   id?: number;
   tickerSymbol?: string;
@@ -10,7 +8,6 @@ export interface ITickerProfile {
   website?: string | null;
   description?: string | null;
   fullTimeEmployees?: number | null;
-  symbol?: ITicker | null;
 }
 
 export const defaultValue: Readonly<ITickerProfile> = {};

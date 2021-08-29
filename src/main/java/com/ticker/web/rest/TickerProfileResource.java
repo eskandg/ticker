@@ -8,8 +8,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -167,39 +165,24 @@ public class TickerProfileResource {
     /**
      * {@code GET  /ticker-profiles} : get all the tickerProfiles.
      *
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickerProfiles in body.
      */
     @GetMapping("/ticker-profiles")
-    public List<TickerProfile> getAllTickerProfiles(@RequestParam(required = false) String filter) {
-        if ("symbol-is-null".equals(filter)) {
-            log.debug("REST request to get all TickerProfiles where symbol is null");
-            return StreamSupport
-                .stream(tickerProfileRepository.findAll().spliterator(), false)
-                .filter(tickerProfile -> tickerProfile.getSymbol() == null)
-                .collect(Collectors.toList());
-        }
+    public List<TickerProfile> getAllTickerProfiles() {
         log.debug("REST request to get all TickerProfiles");
         return tickerProfileRepository.findAll();
     }
 
     /**
-     * {@code GET  /ticker-profiles/:tickerSymbol} : get the "tickerSymbol" tickerProfile.
+     * {@code GET  /ticker-profiles/:id} : get the "id" tickerProfile.
      *
-     * @param tickerSymbol the tickerSymbol of the tickerProfile to retrieve.
+     * @param id the id of the tickerProfile to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the tickerProfile, or with status {@code 404 (Not Found)}.
      */
-    //    @GetMapping("/ticker-profiles/{id}")
-    //    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable Long id) {
-    //        log.debug("REST request to get TickerProfile : {}", id);
-    //        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findById(id);
-    //        return ResponseUtil.wrapOrNotFound(tickerProfile);
-    //    }
-
-    @GetMapping("/ticker-profiles/{tickerSymbol}")
-    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable String tickerSymbol) {
-        log.debug("REST request to get TickerProfile : {}", tickerSymbol);
-        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findByTickerSymbol(tickerSymbol);
+    @GetMapping("/ticker-profiles/{id}")
+    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable Long id) {
+        log.debug("REST request to get TickerProfile : {}", id);
+        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(tickerProfile);
     }
 

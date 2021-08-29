@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +48,7 @@ public class WatchListResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/watch-lists")
-    public ResponseEntity<WatchList> createWatchList(@RequestBody WatchList watchList) throws URISyntaxException {
+    public ResponseEntity<WatchList> createWatchList(@Valid @RequestBody WatchList watchList) throws URISyntaxException {
         log.debug("REST request to save WatchList : {}", watchList);
         if (watchList.getId() != null) {
             throw new BadRequestAlertException("A new watchList cannot already have an ID", ENTITY_NAME, "idexists");
@@ -71,7 +73,7 @@ public class WatchListResource {
     @PutMapping("/watch-lists/{id}")
     public ResponseEntity<WatchList> updateWatchList(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody WatchList watchList
+        @Valid @RequestBody WatchList watchList
     ) throws URISyntaxException {
         log.debug("REST request to update WatchList : {}, {}", id, watchList);
         if (watchList.getId() == null) {
@@ -106,7 +108,7 @@ public class WatchListResource {
     @PatchMapping(value = "/watch-lists/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<WatchList> partialUpdateWatchList(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody WatchList watchList
+        @NotNull @RequestBody WatchList watchList
     ) throws URISyntaxException {
         log.debug("REST request to partial update WatchList partially : {}, {}", id, watchList);
         if (watchList.getId() == null) {
@@ -124,6 +126,10 @@ public class WatchListResource {
             .findById(watchList.getId())
             .map(
                 existingWatchList -> {
+                    if (watchList.getTickerSymbol() != null) {
+                        existingWatchList.setTickerSymbol(watchList.getTickerSymbol());
+                    }
+
                     return existingWatchList;
                 }
             )
@@ -138,13 +144,12 @@ public class WatchListResource {
     /**
      * {@code GET  /watch-lists} : get all the watchLists.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of watchLists in body.
      */
     @GetMapping("/watch-lists")
-    public List<WatchList> getAllWatchLists(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public List<WatchList> getAllWatchLists() {
         log.debug("REST request to get all WatchLists");
-        return watchListRepository.findAllWithEagerRelationships();
+        return watchListRepository.findAll();
     }
 
     /**
@@ -156,7 +161,7 @@ public class WatchListResource {
     @GetMapping("/watch-lists/{id}")
     public ResponseEntity<WatchList> getWatchList(@PathVariable Long id) {
         log.debug("REST request to get WatchList : {}", id);
-        Optional<WatchList> watchList = watchListRepository.findOneWithEagerRelationships(id);
+        Optional<WatchList> watchList = watchListRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(watchList);
     }
 

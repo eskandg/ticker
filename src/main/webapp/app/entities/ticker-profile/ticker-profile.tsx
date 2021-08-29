@@ -4,7 +4,7 @@ import { Button, Col, Row, Table } from 'reactstrap';
 import { byteSize, Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { getProfiles } from './ticker-profile.reducer';
+import { getEntities } from './ticker-profile.reducer';
 import { ITickerProfile } from 'app/shared/model/ticker-profile.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -16,11 +16,11 @@ export const TickerProfile = (props: RouteComponentProps<{ url: string }>) => {
   const loading = useAppSelector(state => state.tickerProfile.loading);
 
   useEffect(() => {
-    dispatch(getProfiles({}));
+    dispatch(getEntities({}));
   }, []);
 
   const handleSyncList = () => {
-    dispatch(getProfiles({}));
+    dispatch(getEntities({}));
   };
 
   const { match } = props;

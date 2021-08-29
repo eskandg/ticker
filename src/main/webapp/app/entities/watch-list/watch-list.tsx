@@ -45,8 +45,8 @@ export const WatchList = (props: RouteComponentProps<{ url: string }>) => {
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Ticker Symbol</th>
                 <th>User</th>
-                <th>Ticker</th>
                 <th />
               </tr>
             </thead>
@@ -58,17 +58,8 @@ export const WatchList = (props: RouteComponentProps<{ url: string }>) => {
                       {watchList.id}
                     </Button>
                   </td>
+                  <td>{watchList.tickerSymbol}</td>
                   <td>{watchList.user ? watchList.user.id : ''}</td>
-                  <td>
-                    {watchList.tickers
-                      ? watchList.tickers.map((val, j) => (
-                          <span key={j}>
-                            <Link to={`ticker/${val.id}`}>{val.id}</Link>
-                            {j === watchList.tickers.length - 1 ? '' : ', '}
-                          </span>
-                        ))
-                      : null}
-                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${watchList.id}`} color="info" size="sm" data-cy="entityDetailsButton">

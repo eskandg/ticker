@@ -1,6 +1,5 @@
 package com.ticker.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -49,10 +48,6 @@ public class TickerProfile implements Serializable {
 
     @Column(name = "full_time_employees")
     private Integer fullTimeEmployees;
-
-    @JsonIgnoreProperties(value = { "tickerSymbol", "watchedIns" }, allowSetters = true)
-    @OneToOne(mappedBy = "tickerSymbol")
-    private Ticker symbol;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -170,25 +165,6 @@ public class TickerProfile implements Serializable {
 
     public void setFullTimeEmployees(Integer fullTimeEmployees) {
         this.fullTimeEmployees = fullTimeEmployees;
-    }
-
-    public Ticker getSymbol() {
-        return this.symbol;
-    }
-
-    public TickerProfile symbol(Ticker ticker) {
-        this.setSymbol(ticker);
-        return this;
-    }
-
-    public void setSymbol(Ticker ticker) {
-        if (this.symbol != null) {
-            this.symbol.setTickerSymbol(null);
-        }
-        if (ticker != null) {
-            ticker.setTickerSymbol(this);
-        }
-        this.symbol = ticker;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

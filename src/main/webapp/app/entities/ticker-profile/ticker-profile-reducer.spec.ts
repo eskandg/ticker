@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import reducer, {
   createEntity,
   deleteEntity,
-  getProfiles,
+  getEntities,
   getEntity,
   updateEntity,
   partialUpdateEntity,
@@ -59,7 +59,7 @@ describe('Entities reducer tests', () => {
 
   describe('Requests', () => {
     it('should set state to loading', () => {
-      testMultipleTypes([getProfiles.pending.type, getEntity.pending.type], {}, state => {
+      testMultipleTypes([getEntities.pending.type, getEntity.pending.type], {}, state => {
         expect(state).toMatchObject({
           errorMessage: null,
           updateSuccess: false,
@@ -93,7 +93,7 @@ describe('Entities reducer tests', () => {
     it('should set a message in errorMessage', () => {
       testMultipleTypes(
         [
-          getProfiles.rejected.type,
+          getEntities.rejected.type,
           getEntity.rejected.type,
           createEntity.rejected.type,
           updateEntity.rejected.type,
@@ -120,7 +120,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: [{ 1: 'fake1' }, { 2: 'fake2' }] };
       expect(
         reducer(undefined, {
-          type: getProfiles.fulfilled.type,
+          type: getEntities.fulfilled.type,
           payload,
         })
       ).toEqual({
@@ -189,14 +189,14 @@ describe('Entities reducer tests', () => {
     it('dispatches FETCH_TICKERPROFILE_LIST actions', async () => {
       const expectedActions = [
         {
-          type: getProfiles.pending.type,
+          type: getEntities.pending.type,
         },
         {
-          type: getProfiles.fulfilled.type,
+          type: getEntities.fulfilled.type,
           payload: resolvedObject,
         },
       ];
-      await store.dispatch(getProfiles({}));
+      await store.dispatch(getEntities({}));
       expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
       expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
     });
@@ -211,7 +211,7 @@ describe('Entities reducer tests', () => {
           payload: resolvedObject,
         },
       ];
-      await store.dispatch(getEntity('42666'));
+      await store.dispatch(getEntity(42666));
       expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
       expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
     });
@@ -222,7 +222,7 @@ describe('Entities reducer tests', () => {
           type: createEntity.pending.type,
         },
         {
-          type: getProfiles.pending.type,
+          type: getEntities.pending.type,
         },
         {
           type: createEntity.fulfilled.type,
@@ -241,7 +241,7 @@ describe('Entities reducer tests', () => {
           type: updateEntity.pending.type,
         },
         {
-          type: getProfiles.pending.type,
+          type: getEntities.pending.type,
         },
         {
           type: updateEntity.fulfilled.type,
@@ -260,7 +260,7 @@ describe('Entities reducer tests', () => {
           type: partialUpdateEntity.pending.type,
         },
         {
-          type: getProfiles.pending.type,
+          type: getEntities.pending.type,
         },
         {
           type: partialUpdateEntity.fulfilled.type,
@@ -279,7 +279,7 @@ describe('Entities reducer tests', () => {
           type: deleteEntity.pending.type,
         },
         {
-          type: getProfiles.pending.type,
+          type: getEntities.pending.type,
         },
         {
           type: deleteEntity.fulfilled.type,
