@@ -107,6 +107,10 @@ public class CacheConfiguration {
         config.setManagementCenterConfig(new ManagementCenterConfig());
         config.addMapConfig(initializeDefaultMapConfig(jHipsterProperties));
         config.addMapConfig(initializeDomainMapConfig(jHipsterProperties));
+        config.addMapConfig(initializeFinnHubQuoteServiceMapConfig());
+        config.addMapConfig(initializeFinnHubQuotesServiceMapConfig());
+        config.addMapConfig(initializeYahooFinanceQuoteServiceMapConfig());
+        config.addMapConfig(initializeYahooFinanceQuotesServiceMapConfig());
         return Hazelcast.newHazelcastInstance(config);
     }
 
@@ -143,6 +147,32 @@ public class CacheConfiguration {
     private MapConfig initializeDomainMapConfig(JHipsterProperties jHipsterProperties) {
         MapConfig mapConfig = new MapConfig("com.ticker.domain.*");
         mapConfig.setTimeToLiveSeconds(jHipsterProperties.getCache().getHazelcast().getTimeToLiveSeconds());
+        return mapConfig;
+    }
+
+    // for single quotes
+    private MapConfig initializeFinnHubQuoteServiceMapConfig() {
+        MapConfig mapConfig = new MapConfig("finnHubQuote");
+        mapConfig.setTimeToLiveSeconds(60);
+        return mapConfig;
+    }
+
+    private MapConfig initializeYahooFinanceQuoteServiceMapConfig() {
+        MapConfig mapConfig = new MapConfig("yahooFinanceQuote");
+        mapConfig.setTimeToLiveSeconds(60 * 5);
+        return mapConfig;
+    }
+
+    // for multiple quotes
+    private MapConfig initializeFinnHubQuotesServiceMapConfig() {
+        MapConfig mapConfig = new MapConfig("finnHubQuotes");
+        mapConfig.setTimeToLiveSeconds(60);
+        return mapConfig;
+    }
+
+    private MapConfig initializeYahooFinanceQuotesServiceMapConfig() {
+        MapConfig mapConfig = new MapConfig("yahooFinanceQuotes");
+        mapConfig.setTimeToLiveSeconds(60 * 5);
         return mapConfig;
     }
 

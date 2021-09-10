@@ -174,15 +174,15 @@ public class TickerProfileResource {
     }
 
     /**
-     * {@code GET  /ticker-profiles/:id} : get the "id" tickerProfile.
+     * {@code GET  /ticker-profiles/:id} : get the "symbol" tickerProfile.
      *
-     * @param id the id of the tickerProfile to retrieve.
+     * @param symbol the symbol of the tickerProfile to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the tickerProfile, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/ticker-profiles/{id}")
-    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable Long id) {
-        log.debug("REST request to get TickerProfile : {}", id);
-        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findById(id);
+    @GetMapping("/ticker-profiles/{symbol}")
+    public ResponseEntity<TickerProfile> getTickerProfile(@PathVariable String symbol) {
+        log.debug("REST request to get TickerProfile : {}", symbol);
+        Optional<TickerProfile> tickerProfile = tickerProfileRepository.findByTickerSymbol(symbol);
         return ResponseUtil.wrapOrNotFound(tickerProfile);
     }
 

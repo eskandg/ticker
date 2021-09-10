@@ -13,10 +13,13 @@ export const Ticker = ({ ticker, profileLogo }) => {
           thumbnail
         />
         <CardBody>
-          <CardTitle>{ticker.symbol}</CardTitle>
+          <CardTitle>{ticker['tickerSymbol']}</CardTitle>
           <CardText>
-            {ticker.pricePercentChange}
-            {ticker.priceChange}
+            {ticker['price'].toFixed(2)}
+            <br />
+            {ticker['change'].toFixed(2)}
+            <br />
+            {ticker['percentChange'].toFixed(3)}%
           </CardText>
         </CardBody>
       </Card>

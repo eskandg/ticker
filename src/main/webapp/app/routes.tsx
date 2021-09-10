@@ -16,6 +16,9 @@ import PageNotFound from 'app/shared/error/page-not-found';
 import { AUTHORITIES } from 'app/config/constants';
 import { sendActivity } from 'app/config/websocket-middleware';
 import Stocks from 'app/modules/stocks/stocks';
+import Profile from 'app/modules/stocks/profile';
+import { getCurrentRoute } from 'app/shared/reducers/routes';
+import { useAppDispatch } from 'app/config/store';
 
 const Account = Loadable({
   loader: () => import(/* webpackChunkName: "account" */ 'app/modules/account'),
@@ -28,9 +31,12 @@ const Admin = Loadable({
 });
 
 const Routes = () => {
+  const dispatch = useAppDispatch();
+
   const location = useLocation();
   React.useEffect(() => {
     sendActivity(location.pathname);
+    dispatch(getCurrentRoute(location.pathname));
   }, [location]);
   return (
     <div className="view-routes">
@@ -43,8 +49,8 @@ const Routes = () => {
         <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
         <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
         <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]} />
-        <ErrorBoundaryRoute path="/" exact component={Home} />
-        <ErrorBoundaryRoute path="/stocks" exact component={Stocks} />
+        <ErrorBoundaryRoute path="/" exact component={Stocks} />
+        <ErrorBoundaryRoute path="/profile/:symbol" component={Profile} />
         <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER]} />
         <ErrorBoundaryRoute component={PageNotFound} />
       </Switch>

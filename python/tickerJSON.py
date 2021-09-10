@@ -11,7 +11,11 @@ auth_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FE
 
 def calculate_change(prev_close_price, current_price):
     price_change = current_price - prev_close_price
-    percentage_price_change = (price_change / prev_close_price) * 100
+    try:
+        percentage_price_change = (price_change / prev_close_price) * 100
+    except ZeroDivisionError:
+        percentage_price_change = 0
+        print(price_change, prev_close_price)
     return {"percentage": f'{percentage_price_change: .2f}%', "price": f'{price_change: .2f}'}
 
 
@@ -57,7 +61,7 @@ def filter_ticker_profile_json(data):
         "phone": data.get("phone", "N/A"),
         "website": data.get("website", ""),
         "description": data.get("longBusinessSummary", "Not Available"),
-        "fullTimeEmployees": data.get("fullTimeEmployees", "N/A"),
+        "fullTimeEmployees": data.get("fullTimeEmployees", 0),
     }
     return filtered_json
 
@@ -85,5 +89,5 @@ json_data = yf.Tickers(" ".join(tickers)).tickers
 for ticker in json_data.values():
     ticker_json = filter_ticker_json(ticker.info)
     profile_json = filter_ticker_profile_json(ticker.info)
-    print(send_json(ticker_json, "tickers").json())    
+    # print(send_json(ticker_json, "tickers").json())    
     print(send_json(profile_json, "ticker-profiles").json())

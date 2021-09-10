@@ -25,8 +25,8 @@ export const getEntities = createAsyncThunk('tickerProfile/fetch_entity_list', a
 
 export const getEntity = createAsyncThunk(
   'tickerProfile/fetch_entity',
-  async (id: string | number) => {
-    const requestUrl = `${apiUrl}/${id}`;
+  async (symbol: string) => {
+    const requestUrl = `${apiUrl}/${symbol}`;
     return axios.get<ITickerProfile>(requestUrl);
   },
   { serializeError: serializeAxiosError }

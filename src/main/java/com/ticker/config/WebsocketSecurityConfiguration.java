@@ -14,13 +14,13 @@ public class WebsocketSecurityConfiguration extends AbstractSecurityWebSocketMes
         messages
             .nullDestMatcher()
             .authenticated()
-            .simpDestMatchers("/topic/tracker")
+            .simpDestMatchers("/websocket/tracker")
             .hasAuthority(AuthoritiesConstants.ADMIN)
             // matches any destination that starts with /topic/
             // (i.e. cannot send messages directly to /topic/)
             // (i.e. cannot subscribe to /topic/messages/* to get messages sent to
             // /topic/messages-user<id>)
-            .simpDestMatchers("/topic/**")
+            .simpDestMatchers("/websocket/**")
             .authenticated()
             // message types other than MESSAGE and SUBSCRIBE
             .simpTypeMatchers(SimpMessageType.MESSAGE, SimpMessageType.SUBSCRIBE)
