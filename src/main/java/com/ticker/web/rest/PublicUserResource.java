@@ -1,5 +1,6 @@
 package com.ticker.web.rest;
 
+import com.ticker.domain.User;
 import com.ticker.service.UserService;
 import com.ticker.service.dto.UserDTO;
 import java.util.*;

@@ -9,6 +9,7 @@ import { clearAuthentication } from './shared/reducers/authentication';
 import ErrorBoundary from './shared/error/error-boundary';
 import AppComponent from './app';
 import { loadIcons } from './config/icon-loader';
+import WebSocket from 'app/modules/websocket/WebSocket';
 
 const store = getStore();
 
@@ -25,6 +26,7 @@ const render = Component =>
     <ErrorBoundary>
       <Provider store={store}>
         <div>
+          <WebSocket />
           <Component />
         </div>
       </Provider>

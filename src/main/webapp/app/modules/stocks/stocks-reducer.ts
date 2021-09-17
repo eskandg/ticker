@@ -10,9 +10,12 @@ const initialState = {
   entities: {},
   entity: {},
   symbols: [],
+  chart: [],
   updating: false,
   updateSuccess: false,
 };
+
+const apiUrl = 'http://localhost:9000/api/';
 
 let isSocketOpen = false;
 
@@ -22,12 +25,13 @@ let doNotUpdateArr = ['price', 'previousClose', 'change', 'percentChange'];
 export type IGetStock = { symbol: string; getMoreDetails: boolean; isSocketActive: boolean };
 export type IGetStocks = { tickerSymbols: string; getMoreDetails: boolean; isSocketActive: boolean };
 export type IGetSymbols = { size: number; getAll: boolean };
+export type IGetChart = { symbol: string; range: string };
 
 export const getStock = createAsyncThunk(
   'ticker/fetch_ticker',
   async ({ symbol, getMoreDetails, isSocketActive }: IGetStock) => {
     isSocketOpen = isSocketActive;
-    const requestUrl = `http://localhost:9000/api/ticker?symbol=${symbol}&getMoreDetails=${getMoreDetails}`;
+    const requestUrl = `${apiUrl}ticker?symbol=${symbol}&getMoreDetails=${getMoreDetails}`;
     return axios.get(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -37,23 +41,39 @@ export const getStocks = createAsyncThunk(
   'ticker/fetch_tickers',
   async ({ tickerSymbols, getMoreDetails, isSocketActive }: IGetStocks) => {
     isSocketOpen = isSocketActive;
-    const requestUrl = `http://localhost:9000/api/tickers?symbols=${tickerSymbols}&getMoreDetails=${getMoreDetails}`;
+    const requestUrl = `${apiUrl}tickers?symbols=${tickerSymbols}&getMoreDetails=${getMoreDetails}`;
     return axios.get(requestUrl);
   },
   { serializeError: serializeAxiosError }
 );
 
+export const addSymbol = createAction<string>('ticker/add_symbol');
+
 export const loadStockSymbols = createAsyncThunk('ticker/load_symbols', ({ size, getAll }: IGetSymbols) => {
-  const requestUrl = `http://localhost:9000/api/symbols?size=${size}&${getAll}`;
+  const requestUrl = `${apiUrl}symbols?size=${size}&${getAll}`;
   return axios.get(requestUrl);
 });
 
+export const removeLoadedSymbols = createAction('ticker/remove_loaded_symbols');
+
 export const updateStocksLive = createAction<[Array<string>, object]>('ticker/update_tickers');
+
+export const getChart = createAsyncThunk(
+  'ticker/get_chart',
+  async ({ symbol, range }: IGetChart) => {
+    const requestUrl = `${apiUrl}chart?symbol=${symbol}&range=${range}`;
+    return axios.get(requestUrl);
+  },
+  { serializeError: serializeAxiosError }
+);
 
 export const StockSlice = createSlice({
   name: 'ticker',
   initialState,
   reducers: {
+    add_symbol(state, action) {
+      state.symbols = [...new Set([...state.symbols, action.payload])];
+    },
     update_tickers(state, action) {
       let stockData, stockQuote;
       let symbols = action.payload[0];
@@ -71,6 +91,9 @@ export const StockSlice = createSlice({
         }
       });
     },
+    remove_loaded_symbols(state) {
+      state.symbols = [];
+    },
   },
   extraReducers(builder) {
     builder
@@ -84,7 +107,11 @@ export const StockSlice = createSlice({
       })
       .addCase(loadStockSymbols.fulfilled, (state, action) => {
         state.loading = false;
-        state.symbols = [...state.symbols];
+        state.symbols = [...new Set([...state.symbols, ...action.payload.data])];
+      })
+      .addCase(getChart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chart = [...action.payload.data];
       })
       .addMatcher(isFulfilled(getStock), (state, action) => {
         // @ts-ignore
@@ -101,11 +128,12 @@ export const StockSlice = createSlice({
         return {
           ...state,
           loading: false,
-          entity: { ...state.entities, [tickerSymbol]: action.payload.data },
+          entities: { ...state.entities, [tickerSymbol]: { ...state.entities[tickerSymbol], ...action.payload.data } },
         };
       })
       .addMatcher(isFulfilled(getStocks), (state, action) => {
         // @ts-ignore
+        log('test', action.payload.data);
         const updateData = () => {
           let map = {};
           let tickerSymbols = Object.keys(action.payload.data);
@@ -131,7 +159,7 @@ export const StockSlice = createSlice({
           entities: { ...state.entities, ...updateData() },
         };
       })
-      .addMatcher(isPending(getStock, getStocks, loadStockSymbols), state => {
+      .addMatcher(isPending(getStock, getStocks, loadStockSymbols, getChart), state => {
         state.errorMessage = null;
         state.loading = true;
       })
@@ -140,7 +168,14 @@ export const StockSlice = createSlice({
         return {
           ...state,
           loading: false,
-          symbols: [...state.symbols, action.payload.data],
+          symbols: [...new Set([...state.symbols, ...action.payload.data])],
+        };
+      })
+      .addMatcher(isFulfilled(getChart), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          chart: [...action.payload.data],
         };
       });
   },

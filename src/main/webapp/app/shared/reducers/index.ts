@@ -11,6 +11,9 @@ import activate, { ActivateState } from 'app/modules/account/activate/activate.r
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+
+import socket from 'app/modules/websocket/websocket-reducer';
+
 import ticker from 'app/modules/stocks/stocks-reducer';
 // prettier-ignore
 import tickerProfile from 'app/entities/ticker-profile/ticker-profile.reducer';
@@ -29,6 +32,7 @@ const rootReducer = {
   passwordReset,
   password,
   settings,
+  socket,
   ticker,
   tickerProfile,
   watchList,

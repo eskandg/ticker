@@ -16,11 +16,11 @@ export const WatchList = (props: RouteComponentProps<{ url: string }>) => {
   const loading = useAppSelector(state => state.watchList.loading);
 
   useEffect(() => {
-    dispatch(getEntities({}));
+    // dispatch(getEntities({}));
   }, []);
 
   const handleSyncList = () => {
-    dispatch(getEntities({}));
+    // dispatch(getEntities({}));
   };
 
   const { match } = props;

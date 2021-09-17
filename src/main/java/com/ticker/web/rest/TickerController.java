@@ -55,6 +55,12 @@ public class TickerController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/chart")
+    public ResponseEntity<List<Map>> getChart(@RequestParam String symbol, String range) {
+        List<Map> response = finnHubService.getChart(symbol, range);
+        return ResponseEntity.ok(response);
+    }
+
     // helper function for getSymbols
     public boolean getCondition(boolean getAll, int iterations, int size) {
         boolean condition;

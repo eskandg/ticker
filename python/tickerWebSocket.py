@@ -4,6 +4,11 @@ import json
 import asyncio
 import websockets
 import sys
+import logging
+
+logger = logging.getLogger('websockets')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 sockets = {"finnhub_ws": None, "connections": []}
 
@@ -20,18 +25,25 @@ def show_available_connections():
 
 
 async def finnhub_client():
-    api_key = "c4qhngqad3icc97rl8ng"
+    api_key = sys.argv[1]
     uri = f"wss://ws.finnhub.io?token={api_key}"
-    async with websockets.connect(uri) as websocket:
+    async with websockets.connect(uri, close_timeout=None) as websocket:
         sockets["finnhub_ws"] = websocket
 
         print("Finnhub client\n--------------")
-        print("\rWaiting for a connection", end="\r")
+        # print("\rWaiting for a connection", end="\r")
 
         while True:
-            data = await websocket.recv()
+            try:
+                # receives subscribe data from our server to send to the finnhub server and receives ticker data from the finnhub server
+                data = await websocket.recv()
+            except:
+                # print("Connection Lost. Reconnecting...")
 
-            for connection in sockets["connections"]:
+                # websocket = await websockets.connect(uri)
+                continue
+
+            for connection in sockets["connections"]:  # sends the data retrieved from finnhub to all the clients
                 try:
                     await connection.send(data)
                 except websockets.ConnectionClosed:
@@ -43,22 +55,22 @@ async def finnhub_client():
                     user_subscriptions.pop(connection)
                     sockets["connections"].remove(connection)
 
-                    show_available_connections()
+                    # show_available_connections()
                     continue
 
 
 async def ws_connection(websocket, path):
     sockets["connections"].append(websocket)
-    show_available_connections()
+    # show_available_connections()
     while True:
-        if websocket.closed:
+        if websocket.closed:  # client closes connection
             break
 
         if websocket not in user_subscriptions:
             user_subscriptions[websocket] = []
 
         try:
-            data = await websocket.recv()
+            data = await websocket.recv()  # wait for subscription data
         except websockets.ConnectionClosed:
             continue
 
@@ -72,7 +84,7 @@ async def ws_connection(websocket, path):
 
         try:
             await sockets["finnhub_ws"].send(data)
-        except AttributeError:
+        except AttributeError or websockets.ConnectionClosed:
             continue
 
 

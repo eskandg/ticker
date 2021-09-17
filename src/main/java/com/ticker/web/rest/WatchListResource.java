@@ -1,13 +1,15 @@
 package com.ticker.web.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ticker.domain.User;
 import com.ticker.domain.WatchList;
 import com.ticker.repository.WatchListRepository;
+import com.ticker.service.UserService;
 import com.ticker.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -34,9 +36,11 @@ public class WatchListResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserService userService;
     private final WatchListRepository watchListRepository;
 
-    public WatchListResource(WatchListRepository watchListRepository) {
+    public WatchListResource(UserService userService, WatchListRepository watchListRepository) {
+        this.userService = userService;
         this.watchListRepository = watchListRepository;
     }
 
@@ -153,31 +157,97 @@ public class WatchListResource {
     }
 
     /**
-     * {@code GET  /watch-lists/:id} : get the "id" watchList.
+     * {@code GET  /watch-lists/:username} : get the tickers associated with the users watchList.
      *
-     * @param id the id of the watchList to retrieve.
+     * @param username the user of the watchList to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the watchList, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/watch-lists/{id}")
-    public ResponseEntity<WatchList> getWatchList(@PathVariable Long id) {
-        log.debug("REST request to get WatchList : {}", id);
-        Optional<WatchList> watchList = watchListRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(watchList);
+    @GetMapping("/watch-lists/{username}")
+    public ResponseEntity<List<Map>> getWatchList(@PathVariable String username) throws JsonProcessingException {
+        log.debug("REST request to get WatchList : {}", username);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Optional<User> userOptional = userService.getPublicUser(username);
+        if (!userOptional.isPresent()) {
+            throw new BadRequestAlertException("Invalid user", ENTITY_NAME, "userinvalid");
+        }
+
+        List<WatchList> watchList = watchListRepository.findAllByUser(userOptional.get()).get();
+
+        List<Map> map = new ArrayList<Map>();
+        // Do not send all of the users details with the response since it is public
+        for (WatchList watchListElement : watchList) {
+            Map response = objectMapper.readValue(objectMapper.writeValueAsString(watchListElement), Map.class);
+            Map userResponse = (Map) response.get("user");
+            userResponse.remove("firstName");
+            userResponse.remove("lastName");
+            userResponse.remove("email");
+            userResponse.remove("activated");
+            userResponse.remove("langKey");
+            userResponse.remove("imageUrl");
+            userResponse.remove("resetDate");
+            map.add(response);
+        }
+        return ResponseEntity.ok(map);
     }
 
     /**
-     * {@code DELETE  /watch-lists/:id} : delete the "id" watchList.
+     * {@code GET  /watch-lists/:username?tickerSymbol} : get the ticker associated with the users watchList.
      *
-     * @param id the id of the watchList to delete.
+     * @param username, tickerSymbol the ticker associated with the user of the watchList to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the watchList, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/watch-lists/{username}/{tickerSymbol}")
+    public ResponseEntity<Map> getWatchListElement(@PathVariable String username, @PathVariable String tickerSymbol)
+        throws JsonProcessingException {
+        log.debug("REST request to get WatchList : {}", tickerSymbol);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Optional<User> userOptional = userService.getPublicUser(username);
+        if (!userOptional.isPresent()) {
+            throw new BadRequestAlertException("Invalid user", ENTITY_NAME, "userinvalid");
+        }
+
+        Optional<WatchList> watchList = watchListRepository.findFirstByUserAndTickerSymbol(userOptional.get(), tickerSymbol);
+
+        // Do not send all of the users details with the response since it is public
+        Map response = objectMapper.readValue(objectMapper.writeValueAsString(watchList.get()), Map.class);
+        Map userResponse = (Map) response.get("user");
+        userResponse.remove("firstName");
+        userResponse.remove("lastName");
+        userResponse.remove("email");
+        userResponse.remove("activated");
+        userResponse.remove("langKey");
+        userResponse.remove("imageUrl");
+        userResponse.remove("resetDate");
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * {@code DELETE  /watch-lists/:username?tickerSymbol} : delete the "username?tickerSymbol" watchList.
+     *
+     * @param username, tickerSymbol : the ticker associated with the user of the watchList to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/watch-lists/{id}")
-    public ResponseEntity<Void> deleteWatchList(@PathVariable Long id) {
-        log.debug("REST request to delete WatchList : {}", id);
-        watchListRepository.deleteById(id);
+    @DeleteMapping("/watch-lists/{username}/{tickerSymbol}")
+    public ResponseEntity<Void> deleteWatchListElement(@PathVariable String username, @PathVariable String tickerSymbol) {
+        log.debug("REST request to delete WatchList by current user and tickerSymbol : {}", tickerSymbol);
+
+        Optional<User> userOptional = userService.getPublicUser(username);
+        if (!userOptional.isPresent()) {
+            throw new BadRequestAlertException("Invalid user", ENTITY_NAME, "userinvalid");
+        }
+
+        watchListRepository.deleteAllByUserAndTickerSymbol(userOptional.get(), tickerSymbol);
+
+        List<String> response = new ArrayList<String>();
+        response.add(tickerSymbol);
+        response.add(username);
+
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, response.toString()))
             .build();
     }
 }

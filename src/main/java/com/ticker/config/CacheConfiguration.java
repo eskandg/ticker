@@ -111,6 +111,7 @@ public class CacheConfiguration {
         config.addMapConfig(initializeFinnHubQuotesServiceMapConfig());
         config.addMapConfig(initializeYahooFinanceQuoteServiceMapConfig());
         config.addMapConfig(initializeYahooFinanceQuotesServiceMapConfig());
+        config.addMapConfig(initializeFinnHubChartServiceMapConfig());
         return Hazelcast.newHazelcastInstance(config);
     }
 
@@ -172,6 +173,12 @@ public class CacheConfiguration {
 
     private MapConfig initializeYahooFinanceQuotesServiceMapConfig() {
         MapConfig mapConfig = new MapConfig("yahooFinanceQuotes");
+        mapConfig.setTimeToLiveSeconds(60 * 5);
+        return mapConfig;
+    }
+
+    private MapConfig initializeFinnHubChartServiceMapConfig() {
+        MapConfig mapConfig = new MapConfig("finnHubChart");
         mapConfig.setTimeToLiveSeconds(60 * 5);
         return mapConfig;
     }

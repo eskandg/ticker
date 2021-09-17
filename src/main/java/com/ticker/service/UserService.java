@@ -295,6 +295,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<User> getPublicUser(String name) {
+        return userRepository.findOneByLogin(name);
+    }
+
+    @Transactional(readOnly = true)
     public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
         return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
     }

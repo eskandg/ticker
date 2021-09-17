@@ -1,12 +1,17 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { logout } from 'app/shared/reducers/authentication';
+import { clearUserWatchListState } from 'app/entities/watch-list/watch-list.reducer';
 
 export const Logout = () => {
   const logoutUrl = useAppSelector(state => state.authentication.logoutUrl);
   const idToken = useAppSelector(state => state.authentication.idToken);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(clearUserWatchListState());
+  }, []);
 
   useLayoutEffect(() => {
     dispatch(logout());
