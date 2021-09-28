@@ -1,4 +1,4 @@
-## ![Ticker Logo](src/main/webapp/content/images/ticker.png)
+![Ticker Logo](src/main/webapp/content/images/ticker.png)
 
 ## Real-time Stock Information & Visualisation App
 
