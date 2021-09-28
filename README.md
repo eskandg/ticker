@@ -1,4 +1,4 @@
-## ![Ticker Logo](src/main/webapp/content/images/ticker.png)
+![Ticker Logo](src/main/webapp/content/images/ticker.png)
 
 ## Real-time Stock Information & Visualisation App
 
@@ -56,8 +56,6 @@ See the [FinnhubService](src/main/java/com/ticker/service/FinnHubService.java) a
 > Any requests made for stock data from our Spring API are cached for a period of time, see the [CacheConfiguration](src/main/java/com/ticker/config/CacheConfiguration.java) file for reference.
 > Any stock symbols loaded are also sent to our WebSocket which returns data to React to process.
 > We subscribe/unsubscribe from these stocks in our WebSocket server based on whether or not users are using them.
-
----
 
 ##
 
