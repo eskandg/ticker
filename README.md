@@ -1,9 +1,6 @@
 ![Ticker Logo](src/main/webapp/content/images/ticker.png)
 
 ## Real-time Stock Information & Visualisation App
-
-***
-
 Real-time stock information & visualisation. Built using Spring Boot, Python, React, React Native and Redux.
 
 Two REST APIs are used, [Finnhub](https://finnhub.io/docs/api) and [Yahoo Finance](https://github.com/sstrickx/yahoofinance-api). These are wrapped in a Spring Boot REST API service which is called by a React front end application. This same
@@ -21,7 +18,7 @@ React frontend application also calls a Python streaming service (built using We
 - [ ] Stock visualisation
 - [ ] Stock market news
 
-***
+##
 
 ### Technologies
 
@@ -41,7 +38,6 @@ cache the requests for data from the API using Spring Boot to control our outbou
 
 See the [FinnhubService](src/main/java/com/ticker/service/FinnHubService.java) and [YahooFinanceService](src/main/java/com/ticker/service/YahooFinanceService.java) services for reference.
 
-***
 
 ## Interactions high level overview
 
@@ -57,7 +53,6 @@ See the [FinnhubService](src/main/java/com/ticker/service/FinnHubService.java) a
 > Any stock symbols loaded are also sent to our WebSocket which returns data to React to process.
 > We subscribe/unsubscribe from these stocks in our WebSocket server based on whether or not users are using them.
 
-##
 
 ## Development
 
