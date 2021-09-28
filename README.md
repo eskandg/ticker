@@ -1,6 +1,65 @@
-# ticker
+## ![Ticker Logo](src/main/webapp/content/images/ticker.png)
 
-This application was generated using JHipster 7.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.1.0](https://www.jhipster.tech/documentation-archive/v7.1.0).
+## Real-time Stock Information & Visualisation App
+
+---
+
+Real-time stock information & visualisation. Built using Spring Boot, Python, React, React Native and Redux.
+
+Two REST APIs are used, [Finnhub](https://finnhub.io/docs/api) and [Yahoo Finance](https://github.com/sstrickx/yahoofinance-api). These are wrapped in a Spring Boot REST API service which is called by a React front end application. This same
+React frontend application also calls a Python streaming service (built using WebSockets) which can relay data from Finnhub's real-time stock information service.
+
+> ### Note
+>
+> The React Native implementation is a work in progress and is not yet available for public distribution.
+
+### Completed or potential/future features
+
+- [x] Real-time stock information
+- [x] Watchlist for registered users to track certain stock
+- [x] Company information with stock data
+- [ ] Stock visualisation
+- [ ] Stock market news
+
+---
+
+### Technologies
+
+- Spring Boot
+- Maven
+- Python
+- React
+- ReduxJS (with ReduxJS Toolkit)
+- Bootstrap 4
+
+### Finnhub and Yahoo Finance API usage limits
+
+Finnhub offers 30 API calls/second while the Yahoo Finance API allows only 2000 requests/hour for their free tier.
+
+Our solution around this is to limit the amount of tickers we can have and
+cache the requests for data from the API using Spring Boot to control our outbound request rate.
+
+See the [FinnhubService](src/main/java/com/ticker/service/FinnHubService.java) and [YahooFinanceService](src/main/java/com/ticker/service/YahooFinanceService.java) services for reference.
+
+---
+
+## Interactions high level overview
+
+> ![High-level interaction diagram for Ticker](src/main/webapp/content/images/diagrams/ticker_high_level_interaction_diagram.svg)
+>
+> ---
+>
+> When users open the app through React, they create a connection to our Python WebSocket server and make requests to the Spring API.
+> From the Spring API, we fetch the users account (if they are logged in), with that information, using both the Yahoo Finance and Finnhub API, we get the users watchlist of stocks (if they are logged in) and
+> any data for stock symbols loaded.
+>
+> Any requests made for stock data from our Spring API are cached for a period of time, see the [CacheConfiguration](src/main/java/com/ticker/config/CacheConfiguration.java) file for reference.
+> Any stock symbols loaded are also sent to our WebSocket which returns data to React to process.
+> We subscribe/unsubscribe from these stocks in our WebSocket server based on whether or not users are using them.
+
+---
+
+##
 
 ## Development
 
@@ -75,6 +134,18 @@ Then you would import the JS and CSS files specified in library's installation i
 Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
+
+## Setting up Python
+
+Python is used for our WebSocket server.
+For it to work, you need a version of [Python 3.7 or above](https://www.python.org/downloads/).
+Once you have checked that you have the correct installation, finally, you will need to install the packages used from [requirements.txt](src/main/python/requirements.txt).
+
+For example, you can install the packages like this from the root of the repository.
+
+```
+pip install -r src/main/python/requirements.txt
+```
 
 ## Building for production
 

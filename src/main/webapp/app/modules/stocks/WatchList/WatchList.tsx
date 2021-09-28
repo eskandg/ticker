@@ -13,6 +13,7 @@ export const WatchList = props => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
   const tickers = useAppSelector(state => state.ticker.entities);
+  const symbols = useAppSelector(state => state.ticker.symbols);
   const watchListElements = useAppSelector(state => state.watchList.userFollows);
   const [useModal, setUseModal] = useState(false);
   const [useTooltip, setUseTooltip] = useState(false);
@@ -25,7 +26,7 @@ export const WatchList = props => {
 
   useEffect(() => {
     watchListElements.map(tickerSymbol => {
-      if (!(tickerSymbol in tickers)) {
+      if (!new Set(Object.keys(tickers)).has(tickerSymbol) && !new Set(symbols).has(tickerSymbol)) {
         dispatch(addSymbol(tickerSymbol));
         dispatch(getStock({ symbol: tickerSymbol, getMoreDetails: true, isSocketActive: false }));
       }
@@ -39,7 +40,9 @@ export const WatchList = props => {
   const handleWatchListTooltip = () => {
     if (useModal) {
       setUseTooltip(false);
-    } else setUseTooltip(!useTooltip);
+    } else {
+      setUseTooltip(!useTooltip);
+    }
   };
 
   return (

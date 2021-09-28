@@ -65,10 +65,14 @@ public class TickerApp {
         }
     }
 
+    /**
+     * Starts our python websocket server for the Finnhub websocket client
+     * @throws IOException
+     */
     @PostConstruct
     public void initWebSocketServer() throws IOException {
         String projectRoot = System.getProperty("user.dir");
-        String pythonFilePathFromProjectRoot = "/python/tickerWebSocket.py";
+        String pythonFilePathFromProjectRoot = "/src/main/python/tickerWebSocket.py";
         String[] args = { "python", String.format("%s%s", projectRoot, pythonFilePathFromProjectRoot), finnHubApiKey };
         Runtime.getRuntime().exec(args);
     }

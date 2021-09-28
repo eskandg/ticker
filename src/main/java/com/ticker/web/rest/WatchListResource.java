@@ -52,16 +52,20 @@ public class WatchListResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/watch-lists")
-    public ResponseEntity<WatchList> createWatchList(@Valid @RequestBody WatchList watchList) throws URISyntaxException {
+    public ResponseEntity<Map> createWatchList(@Valid @RequestBody WatchList watchList) throws URISyntaxException {
         log.debug("REST request to save WatchList : {}", watchList);
         if (watchList.getId() != null) {
             throw new BadRequestAlertException("A new watchList cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        Map response = new HashMap();
+        response.put("response", "Created watchlist element");
+
         WatchList result = watchListRepository.save(watchList);
         return ResponseEntity
             .created(new URI("/api/watch-lists/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(response);
     }
 
     /**
@@ -175,6 +179,7 @@ public class WatchListResource {
         List<WatchList> watchList = watchListRepository.findAllByUser(userOptional.get()).get();
 
         List<Map> map = new ArrayList<Map>();
+
         // Do not send all of the users details with the response since it is public
         for (WatchList watchListElement : watchList) {
             Map response = objectMapper.readValue(objectMapper.writeValueAsString(watchListElement), Map.class);

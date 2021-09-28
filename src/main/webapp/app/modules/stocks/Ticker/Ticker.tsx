@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardBody, CardImg, CardText, CardTitle, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import TickerFollowButton from 'app/modules/stocks/WatchList/TickerFollowButton';
+import { log } from 'react-jhipster';
 
 export const Ticker = ({ ticker }) => {
   return (

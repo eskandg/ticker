@@ -1,5 +1,9 @@
 package com.ticker.service;
 
+/**
+ * Service for the Finnhub API.
+ */
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -19,7 +23,7 @@ public class FinnHubService {
     private RestTemplate restTemplate = new RestTemplate();
     private static final String finnHubApiUrl = "https://finnhub.io/api/v1/";
 
-    @Value("${app.keys.finnHubApiKey}")
+    @Value("${app.keys.finnHubApiKey}") // set in environment variables
     private String finnHubApiKey;
 
     @Cacheable("finnHubQuote")
@@ -53,20 +57,20 @@ public class FinnHubService {
     }
 
     // helper function for getChart function
-    public Long getPastTimeUnix(Long currentTime, String range) {
+    public Long getPastTimeUnix(Long time, String range) {
         Integer daySeconds = 86400;
         switch (range) {
             case "D":
-                currentTime -= daySeconds;
+                time -= daySeconds;
             case "W":
-                currentTime -= daySeconds * 7;
+                time -= daySeconds * 7;
             case "M":
-                currentTime -= 2629743; // 30.44 days
+                time -= 2629743; // 30.44 days
             case "Y":
-                currentTime -= 31556926; // 365.24 days
+                time -= 31556926; // 365.24 days
         }
 
-        return currentTime;
+        return time;
     }
 
     // helper function for getChart function

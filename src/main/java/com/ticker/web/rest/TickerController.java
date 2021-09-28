@@ -7,6 +7,7 @@ import com.ticker.service.YahooFinanceService;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.*;
 import liquibase.util.csv.opencsv.CSVReader;
@@ -16,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * REST controller for managing ticker data.
+ */
 @RestController
 @RequestMapping("/api")
 public class TickerController {
@@ -28,6 +32,13 @@ public class TickerController {
     @Autowired
     YahooFinanceService yahooFinanceService;
 
+    /**
+     * {@code GET  /ticker} : Get data for a ticker.
+     *
+     * @param symbol the symbol of the ticker to get.
+     * @param getMoreDetails boolean if true gets yahoo finance and finnhub ticker data else only gets finnhub data.
+     * @return Map containing ticker data, dependent on getMoreDetails.
+     */
     @GetMapping("/ticker")
     public ResponseEntity<Map> getTicker(@RequestParam String symbol, boolean getMoreDetails, boolean isSocketActive) throws IOException {
         Map response = finnHubService.getQuote(symbol);
@@ -42,6 +53,13 @@ public class TickerController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * {@code GET  /tickers} : Gets data for a list of tickers.
+     *
+     * @param symbols the symbols of tickers to get.
+     * @param getMoreDetails boolean if true gets yahoo finance and finnhub ticker data else only gets finnhub data.
+     * @return Map containing ticker data, dependent on getMoreDetails.
+     */
     @GetMapping("/tickers")
     public ResponseEntity<Map> getTickers(@RequestParam List<String> symbols, boolean getMoreDetails, boolean isSocketActive)
         throws IOException {
@@ -55,6 +73,13 @@ public class TickerController {
         return ResponseEntity.ok(responses);
     }
 
+    /**
+     * {@code GET  /chart} : Get chart data for a ticker.
+     *
+     * @param symbol the symbol of the ticker chart to get.
+     * @param range the time ranging between a day and a year in the past (for example "Y" is a year)
+     * @return List of maps containing chart data, dependent on range.
+     */
     @GetMapping("/chart")
     public ResponseEntity<List<Map>> getChart(@RequestParam String symbol, String range) {
         List<Map> response = finnHubService.getChart(symbol, range);
@@ -71,8 +96,12 @@ public class TickerController {
     }
 
     /**
-     * Returns list of symbols according to size given or available size
-     **/
+     * {@code GET  /symbols} : Gets a number of or all symbols.
+     *
+     * @param getAll gets all the symbols if true.
+     * @param pageable the pagination information.
+     * @return Returns list of symbols according to size given or available size.
+     */
     @GetMapping("/symbols")
     public List<String> getSymbols(boolean getAll, Pageable pageable) throws FileNotFoundException {
         final String file = Paths.get("src/main/java/com/ticker/web/rest").toAbsolutePath() + "\\tickers.csv";

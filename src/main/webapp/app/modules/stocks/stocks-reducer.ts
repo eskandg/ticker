@@ -133,7 +133,6 @@ export const StockSlice = createSlice({
       })
       .addMatcher(isFulfilled(getStocks), (state, action) => {
         // @ts-ignore
-        log('test', action.payload.data);
         const updateData = () => {
           let map = {};
           let tickerSymbols = Object.keys(action.payload.data);

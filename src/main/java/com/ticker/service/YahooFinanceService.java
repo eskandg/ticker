@@ -1,5 +1,9 @@
 package com.ticker.service;
 
+/**
+ * Service for the yfinance API.
+ */
+
 import com.ticker.domain.Mappers.StockMapper;
 import java.io.IOException;
 import java.util.List;

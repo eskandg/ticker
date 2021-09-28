@@ -15,6 +15,8 @@ import useInterval from 'react-useinterval';
 
 let socket = null;
 
+let mount = false;
+let watchListLoading = false;
 export const Stocks = (props: RouteComponentProps<any>) => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
@@ -22,6 +24,7 @@ export const Stocks = (props: RouteComponentProps<any>) => {
   const tickers = useAppSelector(state => state.ticker.entities);
   const userFollows = useAppSelector(state => state.watchList.userFollows);
   const symbols = useAppSelector(state => state.ticker.symbols);
+
   const isSocketOpen = useAppSelector(state => state.socket.isSocketOpen);
 
   // const [pagination, setPagination] = useState(
@@ -32,18 +35,14 @@ export const Stocks = (props: RouteComponentProps<any>) => {
   // if (props.location.search !== endURL) {
   //   props.history.push(`${props.location.pathname}${endURL}`);
   // }
-
   let finnHubTimer, yahooFinanceTimer;
-
   const timedUpdateFn = getMoreDetails => {
     if (symbols.length > 0) {
       dispatch(getStocks({ tickerSymbols: symbols.join(','), getMoreDetails: getMoreDetails, isSocketActive: isSocketOpen }));
     }
   };
-
   useEffect(() => {
     if (symbols.length > 0) {
-      let watchListLoading = false;
       const userFollowsSet = new Set(userFollows);
       for (let i = 0; i < symbols.length; i++) {
         if (userFollowsSet.has(symbols[i])) {
@@ -52,12 +51,22 @@ export const Stocks = (props: RouteComponentProps<any>) => {
         }
       }
 
-      if (!watchListLoading) dispatch(getStocks({ tickerSymbols: symbols.join(','), getMoreDetails: true, isSocketActive: isSocketOpen }));
+      if (!watchListLoading) {
+        dispatch(getStocks({ tickerSymbols: symbols.join(','), getMoreDetails: true, isSocketActive: isSocketOpen }));
+      }
     }
   }, [symbols]);
 
   useEffect(() => {
+    if (mount && symbols.length > 0) {
+      dispatch(getStocks({ tickerSymbols: symbols.join(','), getMoreDetails: true, isSocketActive: false }));
+      mount = false;
+    }
+  }, [mount, symbols]);
+
+  useEffect(() => {
     dispatch(loadStockSymbols({ size: 10, getAll: false }));
+    mount = true;
   }, []);
 
   finnHubTimer = useInterval(timedUpdateFn, 12000, false); // get finnhub data

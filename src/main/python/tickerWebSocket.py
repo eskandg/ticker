@@ -1,5 +1,21 @@
 #!/usr/bin/env/python
 
+"""
+
+[ Description ]
+
+    This creates our websocket server for ticker trade data from Finnhub.
+    The purpose of doing this in the back-end and not the front-end is to prevent the API key from being exposed for security reasons.
+
+    { How it works }
+        The server takes incoming connections from clients on the front-end and receives ticker subscription data.
+        This data is then sent to another websocket, the Finnhub client.
+        The Finnhub client then waits for ticker data and sends the data to our server its also been waiting for.
+        Our server then sends the data received to all of our connected clients.
+
+"""
+
+
 import json
 import asyncio
 import websockets
@@ -27,7 +43,7 @@ def show_available_connections():
 async def finnhub_client():
     api_key = sys.argv[1]
     uri = f"wss://ws.finnhub.io?token={api_key}"
-    async with websockets.connect(uri, close_timeout=None) as websocket:
+    async with websockets.connect(uri, ping_interval=None, close_timeout=None) as websocket:
         sockets["finnhub_ws"] = websocket
 
         print("Finnhub client\n--------------")
@@ -37,16 +53,18 @@ async def finnhub_client():
             try:
                 # receives subscribe data from our server to send to the finnhub server and receives ticker data from the finnhub server
                 data = await websocket.recv()
+                print("finnhub receive")
             except:
                 # print("Connection Lost. Reconnecting...")
 
                 # websocket = await websockets.connect(uri)
                 continue
 
-            for connection in sockets["connections"]:  # sends the data retrieved from finnhub to all the clients
+            for connection in sockets["connections"]:  # sends the data retrieved from finnhub to all the users
+                print("sending data to connections")
                 try:
                     await connection.send(data)
-                except websockets.ConnectionClosed:
+                except websockets.ConnectionClosed:  # reduce subscriptions made by the user
                     for subscription in user_subscriptions[connection]:
                         subscriptions_to_finnhub[subscription] -= 1
                         if subscriptions_to_finnhub[subscription] == 0:
@@ -70,7 +88,7 @@ async def ws_connection(websocket, path):
             user_subscriptions[websocket] = []
 
         try:
-            data = await websocket.recv()  # wait for subscription data
+            data = await websocket.recv()  # wait for subscription data from the client on the front-end
         except websockets.ConnectionClosed:
             continue
 
@@ -89,7 +107,7 @@ async def ws_connection(websocket, path):
 
 
 port = 8000
-start_server = websockets.serve(ws_connection, "localhost", port)
+start_server = websockets.serve(ws_connection, "localhost", port, ping_interval=None, close_timeout=None)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_until_complete(finnhub_client())

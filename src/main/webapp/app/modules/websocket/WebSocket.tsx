@@ -5,6 +5,8 @@ import { addSubscriptions, setIsSocketOpen } from 'app/modules/websocket/websock
 import { removeLoadedSymbols, updateStocksLive } from 'app/modules/stocks/stocks-reducer';
 import { log } from 'react-jhipster';
 
+// Websocket component to be used at the top of the app
+
 let socket = null;
 export const WebSocket = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +31,7 @@ export const WebSocket = () => {
   useEffect(() => {
     return () => {
       if (socket !== null) {
+        dispatch(setIsSocketOpen(false));
         socket.close();
       }
     };

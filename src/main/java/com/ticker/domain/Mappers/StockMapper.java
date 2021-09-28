@@ -1,5 +1,9 @@
 package com.ticker.domain.Mappers;
 
+/**
+ * Mapper for finnhub and/or yfinance stock data
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 import yahoofinance.Stock;
