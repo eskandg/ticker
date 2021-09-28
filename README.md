@@ -2,7 +2,7 @@
 
 ## Real-time Stock Information & Visualisation App
 
----
+***
 
 Real-time stock information & visualisation. Built using Spring Boot, Python, React, React Native and Redux.
 
@@ -21,7 +21,7 @@ React frontend application also calls a Python streaming service (built using We
 - [ ] Stock visualisation
 - [ ] Stock market news
 
----
+***
 
 ### Technologies
 
@@ -41,13 +41,13 @@ cache the requests for data from the API using Spring Boot to control our outbou
 
 See the [FinnhubService](src/main/java/com/ticker/service/FinnHubService.java) and [YahooFinanceService](src/main/java/com/ticker/service/YahooFinanceService.java) services for reference.
 
----
+***
 
 ## Interactions high level overview
 
 > ![High-level interaction diagram for Ticker](src/main/webapp/content/images/diagrams/ticker_high_level_interaction_diagram.svg)
 >
-> ---
+> ***
 >
 > When users open the app through React, they create a connection to our Python WebSocket server and make requests to the Spring API.
 > From the Spring API, we fetch the users account (if they are logged in), with that information, using both the Yahoo Finance and Finnhub API, we get the users watchlist of stocks (if they are logged in) and
@@ -56,8 +56,6 @@ See the [FinnhubService](src/main/java/com/ticker/service/FinnHubService.java) a
 > Any requests made for stock data from our Spring API are cached for a period of time, see the [CacheConfiguration](src/main/java/com/ticker/config/CacheConfiguration.java) file for reference.
 > Any stock symbols loaded are also sent to our WebSocket which returns data to React to process.
 > We subscribe/unsubscribe from these stocks in our WebSocket server based on whether or not users are using them.
-
----
 
 ##
 
@@ -106,11 +104,11 @@ The service worker initialization code is commented out by default. To enable it
 
 ```html
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then(function () {
-      console.log('Service Worker Registered');
-    });
-  }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./service-worker.js').then(function () {
+            console.log('Service Worker Registered');
+        });
+    }
 </script>
 ```
 
